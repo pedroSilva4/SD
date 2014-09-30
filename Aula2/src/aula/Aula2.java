@@ -19,7 +19,7 @@ public class Aula2 {
      */
     public static void main(String[] args) throws InterruptedException 
     { 
-        Counter c = new Counter();
+       Counter c = new Counter();
        ArrayList<ThreadTest> arr  = new ArrayList<>();
        for(int n = 0;n< 31;n++)
        {
@@ -29,7 +29,7 @@ public class Aula2 {
        for(ThreadTest t:arr)
        {
            t.start();
-         
+       //  t.join();
        }
        for(ThreadTest t:arr)
        {
