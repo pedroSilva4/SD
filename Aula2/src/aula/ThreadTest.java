@@ -22,11 +22,13 @@ public class ThreadTest extends Thread {
     @Override
     public void run()
     {
-        for(int i = 1; i< max;i++)
-        {
-            counter.inc();
-        }
-        System.out.println("Thread nº"+(max/100)+": "+counter.count);
+        
+            for(int i = 1; i<max;i++)
+            {
+                counter.inc();
+            }
+            System.out.println("Thread nº"+(max/100)+": "+counter.count);
+        
     }
     
 }
