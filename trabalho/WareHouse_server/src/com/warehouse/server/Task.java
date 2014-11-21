@@ -8,6 +8,7 @@ package com.warehouse.server;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -19,13 +20,13 @@ import java.util.ListIterator;
 public class Task {
     
     private final String task_id;
-    private final List<Tool> tools;
+    private final HashMap<String,Integer> tools;
     
     
-    public Task(String tsk_id,List<Tool> obj)
+    public Task(String tsk_id,HashMap<String,Integer> t)
     {
         task_id = tsk_id;
-        tools  = new ArrayList<>(obj);
+        tools  = new HashMap<>(t);
     }
 }
     
