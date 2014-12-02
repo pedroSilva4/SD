@@ -46,14 +46,18 @@ public class WareHouse {
     public void add_tool(String name)
     {
         lockInv();
-        try{ inventory.put(name, new Tool(name, 0, inv_lock.newCondition()));}
+        try{ 
+            inventory.put(name, new Tool(name, 0, inv_lock.newCondition()));
+        }
         finally{unlockInv();}
     }
     
     public void define_task(String name,HashMap<String,Integer> tools)
     {
        lockTsk();
-       try{tasks.put(name,new Task(name, tools));}
+       try{
+           tasks.put(name,new Task(name, tools));
+       }
        finally{unlockTsk();}
     }
 }
