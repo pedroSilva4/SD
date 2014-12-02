@@ -37,7 +37,9 @@ public class WareHouse {
     public void add_tool(String name,int qtt)
     {
         lockInv();
-        try{inventory.put(name, new Tool(name, qtt, inv_lock.newCondition()));}
+        try{
+            inventory.put(name, new Tool(name, qtt, inv_lock.newCondition()));
+        }
         finally{unlockInv();}
     }
     
