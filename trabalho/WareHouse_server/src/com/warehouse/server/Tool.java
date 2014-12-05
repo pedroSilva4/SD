@@ -35,6 +35,10 @@ public class Tool {
         this.returnable = returnable; 
     }
     
+    public String getId() {
+      return this.tool_name;  
+    }
+        
     public void await() throws InterruptedException
     {
         this.tl_condition.await();
