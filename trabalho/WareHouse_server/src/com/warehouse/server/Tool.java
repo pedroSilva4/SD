@@ -17,19 +17,22 @@ public class Tool {
     private final Condition tl_condition;
     private final String tool_name;
     private int quantity;
+    private boolean returnable;
   
-    public Tool(String tl_name,int qtt,Condition c)
+    public Tool(String tl_name,int qtt,Condition c,boolean returnable)
     {
         tool_name  =tl_name;
         quantity = qtt;
         tl_condition = c;
+        this.returnable = returnable;
     }
     
-    public Tool(String tl_name,Condition c)
+    public Tool(String tl_name,Condition c,boolean returnable)
     {
         tool_name = tl_name;
         quantity = 0;
-         tl_condition = c;
+        tl_condition = c;
+        this.returnable = returnable; 
     }
     
     public void await() throws InterruptedException
@@ -60,5 +63,10 @@ public class Tool {
     public void inc(int qtd)
     {
         this.quantity+=qtd;
+    }
+    
+    public boolean is_returnable()
+    {
+        return this.returnable;
     }
 }
