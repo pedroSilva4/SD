@@ -6,6 +6,7 @@
 
 package warehouse;
 
+import com.warehouse.server.Tool;
 import com.warehouse.server.WareHouse;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -82,6 +83,29 @@ public class Test_tasks_tools {
          wks[i] = new worker();
          wks[i].start();    
          }
+=======
+        
+        class consulter extends Thread {
+            @Override
+            public void run() {
+                while(true) {
+                    HashMap<String,Tool> inv = wh.get_inventory();
+                    for(Tool t : inv.values()) {
+                        System.out.println("Tool: " + t.getId() + " Quantity: " + t.qtd());
+                    }
+                    try {
+                        sleep(1000);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Test_tasks_tools.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }
+        
+        
+        
+        
+
         // TODO code application logic here
     }
     
