@@ -76,7 +76,7 @@ public class WareHouse {
         return t;
     }
     
-    public void do_task(String task_id)
+    public void task_request(String task_id) throws InterruptedException
     {
         HashMap<String,Integer> tools  = null;
         lockTsk();
@@ -88,14 +88,23 @@ public class WareHouse {
         if(tools!=null){
             lockInv();
             try{
-                for(String s: tools.keySet()){
-                    
-                    Tool t = getTool(s);
-                    if(tools.get(s) >= t.qtd())
-                            t.await();
+                Tool t;
+                boolean notready = true;
+                while(notready){
+                    notready = false;
+                    for(String s: tools.keySet()){
+                            t = getTool(s);
+                        
+                            if(tools.get(s) >= t.qtd()){
+                                         notready=true;
+                                         t.await();
+                                         break;
+                            }
+                    }
                 }
                 for(String s: tools.keySet()){
-                    
+                    t = getTool(s);
+                    t.dec(tools.get(s));
                 }
             }
             finally{unlockInv();}
