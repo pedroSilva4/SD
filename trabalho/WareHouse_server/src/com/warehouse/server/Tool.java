@@ -31,4 +31,34 @@ public class Tool {
         quantity = 0;
          tl_condition = c;
     }
+    
+    public void await() throws InterruptedException
+    {
+        this.tl_condition.await();
+    }
+    
+    public void signal()
+    {
+        this.tl_condition.signal();
+    }
+    
+    public void signalAll()
+    {
+        this.tl_condition.signalAll();
+    }
+    
+    public int qtd()
+    {
+        return this.quantity;
+    }
+    
+    public void dec(int qtd)
+    {
+        this.quantity-=qtd;
+    }
+    
+    public void inc(int qtd)
+    {
+        this.quantity+=qtd;
+    }
 }

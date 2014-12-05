@@ -38,7 +38,10 @@ public class WareHouse {
     {
         lockInv();
         try{
-            inventory.put(name, new Tool(name, qtt, inv_lock.newCondition()));
+            Tool tool = new Tool(name, qtt, inv_lock.newCondition());
+            inventory.put(name, tool);
+            
+            tool.signalAll();//ver qual a melhor solução para isto
         }
         finally{unlockInv();}
     }
@@ -59,6 +62,44 @@ public class WareHouse {
            tasks.put(name,new Task(name, tools));
        }
        finally{unlockTsk();}
+    }
+    
+    private Tool getTool(String name)
+    {
+        Tool t = inventory.get(name);
+        
+        if(t!=null) return t;
+        
+        t = new Tool(name, this.inv_lock.newCondition());
+        inventory.put(name, t);
+        
+        return t;
+    }
+    
+    public void do_task(String task_id)
+    {
+        HashMap<String,Integer> tools  = null;
+        lockTsk();
+        try{
+            tools = tasks.get(task_id).getTools();
+        }
+        finally{unlockTsk();}
+        
+        if(tools!=null){
+            lockInv();
+            try{
+                for(String s: tools.keySet()){
+                    
+                    Tool t = getTool(s);
+                    if(tools.get(s) >= t.qtd())
+                            t.await();
+                }
+                for(String s: tools.keySet()){
+                    
+                }
+            }
+            finally{unlockInv();}
+        }
     }
 }
 

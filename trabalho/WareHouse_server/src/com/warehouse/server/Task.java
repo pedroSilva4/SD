@@ -23,6 +23,11 @@ public class Task {
         task_id = tsk_id;
         tools  = new HashMap<>(t);
     }
+    
+    public HashMap<String,Integer> getTools()
+    {
+        return new HashMap<>(this.tools);
+    }
 }
     
 
