@@ -60,5 +60,37 @@ public class WareHouse {
        }
        finally{unlockTsk();}
     }
+    
+    public HashMap<String,Task> get_tasks()
+    {
+        HashMap<String,Task> map;
+        lockTsk();
+        try {
+            map = tasks;
+            return map;
+        } finally { unlockTsk(); }
+    }
+    
+    public Task get_task(String name)
+    {
+        Task t;
+        
+        lockTsk();
+        try {
+            t = tasks.get(name);
+            return t;
+        } finally { unlockTsk(); }
+    }
+    
+    public HashMap<String,Tool> get_inventory()
+    {
+        HashMap<String,Tool> map;
+        
+        lockInv();
+        try {
+            map = inventory;
+            return map;
+        } finally { unlockInv(); }
+    }
 }
 
