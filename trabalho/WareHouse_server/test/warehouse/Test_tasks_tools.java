@@ -45,7 +45,7 @@ public class Test_tasks_tools {
                HashMap<String,Integer> tools = new HashMap<>();
                
                tools.put("tool0",2);
-               tools.put("tool4",2);
+               tools.put("tool4",4);
                tools.put("tool6",2);
                
                wh.define_task("Escacar Pedra", tools);
@@ -69,21 +69,7 @@ public class Test_tasks_tools {
          }
          
         
-         supply sp  = new supply();
-         sp.start();
-         sp.join();
-         
-         definer df = new definer();
-         df.start();
-         df.join();
-         worker[] wks = new worker[5];
-         
-         
-         for(int i = 0;i<5;i++){
-         wks[i] = new worker();
-         wks[i].start();    
-         }
-=======
+       
         
         class consulter extends Thread {
             @Override
@@ -94,7 +80,7 @@ public class Test_tasks_tools {
                         System.out.println("Tool: " + t.getId() + " Quantity: " + t.qtd());
                     }
                     try {
-                        sleep(1000);
+                        sleep(6000);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(Test_tasks_tools.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -104,8 +90,24 @@ public class Test_tasks_tools {
         
         
         
-        
-
+         supply sp  = new supply();
+         sp.start();
+         sp.join();
+         
+         consulter cs = new consulter();
+         cs.start();
+         definer df = new definer();
+         df.start();
+         df.join();
+         worker[] wks = new worker[5];
+         
+         
+         for(int i = 0;i<5;i++){
+         wks[i] = new worker();
+         wks[i].start();    
+         }
+         cs.join();
+         
         // TODO code application logic here
     }
     
