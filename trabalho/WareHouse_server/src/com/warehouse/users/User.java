@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.sdproject.users;
+package com.warehouse.users;
 
 /**
  *
@@ -20,6 +20,10 @@ public class User {
          username = name;
          password= pass;
      }
+
+    Object getPassword() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
      
    
     

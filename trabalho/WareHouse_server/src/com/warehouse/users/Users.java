@@ -6,6 +6,8 @@
 
 package com.warehouse.users;
 
+import com.warehouse.util.WrongPasswordException;
+import com.warehouse.util.UserNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -38,17 +40,24 @@ public class Users {
         finally{ulock.unlock();}
     }
     
-    public boolean login(String username, String password)
+    public boolean login(String username, String password) throws UserNotFoundException, WrongPasswordException
     {
         User u = null;
         ulock.lock();
         try{
            u = this.users.get(username);
-           if(u==null) return false;
         }
         finally{ulock.unlock();}
         
+        if(u==null) throw new UserNotFoundException();
         
+        if(!password.equals(u.getPassword())) throw new WrongPasswordException();
+        
+        llock.lock();
+        try{
+            this.logged.add(username);
+        }
+        finally{llock.unlock();}
         return true;
     }
     
