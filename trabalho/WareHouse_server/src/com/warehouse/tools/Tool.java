@@ -27,12 +27,28 @@ public class Tool {
         this.returnable = returnable;
     }
     
+    public Tool(String tl_name,int qtt,Condition c)
+    {
+        tool_name  =tl_name;
+        quantity = qtt;
+        tl_condition = c;
+        this.returnable = true;
+    }
+    
     public Tool(String tl_name,Condition c,boolean returnable)
     {
         tool_name = tl_name;
         quantity = 0;
         tl_condition = c;
         this.returnable = returnable; 
+    }
+    
+    public Tool(String tl_name,Condition c)
+    {
+        tool_name = tl_name;
+        quantity = 0;
+        tl_condition = c;
+        this.returnable = true; 
     }
     
     public String getId() {

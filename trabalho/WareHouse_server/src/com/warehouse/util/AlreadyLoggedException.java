@@ -4,22 +4,15 @@
  * and open the template in the editor.
  */
 
-package com.warehouse.server;
-
-import com.warehouse.users.Users;
-
-
+package com.warehouse.util;
 
 /**
  *
  * @author Pedro
  */
-public class Server {
-    private Users users;
-    private Manager manager;
-    //ServerSocket ss;
-    //main
-    
-    
+public class AlreadyLoggedException extends Exception {
+
+    public AlreadyLoggedException() {
+    }
     
 }

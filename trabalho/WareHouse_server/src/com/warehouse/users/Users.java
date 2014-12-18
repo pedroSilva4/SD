@@ -6,6 +6,7 @@
 
 package com.warehouse.users;
 
+import com.warehouse.util.AlreadyLoggedException;
 import com.warehouse.util.WrongPasswordException;
 import com.warehouse.util.UserNotFoundException;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class Users {
         finally{ulock.unlock();}
     }
     
-    public boolean login(String username, String password) throws UserNotFoundException, WrongPasswordException
+    public void login(String username, String password) throws UserNotFoundException, WrongPasswordException, AlreadyLoggedException
     {
         User u = null;
         ulock.lock();
@@ -55,10 +56,22 @@ public class Users {
         
         llock.lock();
         try{
+            if(logged.contains(username)) throw new AlreadyLoggedException();
+            //aviso
             this.logged.add(username);
+           
         }
         finally{llock.unlock();}
-        return true;
     }
+    
+    public void logout(String username)
+    {
+        llock.lock();
+        try{
+            this.logged.remove(username);
+        }
+        finally{llock.unlock();}
+    }
+    
     
 }
