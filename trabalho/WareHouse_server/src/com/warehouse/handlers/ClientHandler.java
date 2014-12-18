@@ -26,6 +26,7 @@ public class ClientHandler extends Thread{
     
     public ClientHandler(Socket sc,Users us,Manager m)
     {
+        this.sc  = sc;
         skeleton = new WareHouseSkeleton(us,m);
     }
     
