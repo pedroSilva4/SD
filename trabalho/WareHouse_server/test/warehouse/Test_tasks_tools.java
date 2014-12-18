@@ -4,10 +4,10 @@
  * and open the template in the editor.
  */
 
-package warehouse;
+package sdproject;
 
-import com.warehouse.server.Tool;
-import com.warehouse.server.WareHouse;
+import com.sdproject.tools.Tool;
+import com.sdproject.tools.sdproject;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +23,7 @@ public class Test_tasks_tools {
      */
     public static void main(String[] args) throws InterruptedException {
         
-        final WareHouse wh = new WareHouse();
+        final sdproject wh = new sdproject();
         
         class supply extends Thread
         {
@@ -48,22 +48,14 @@ public class Test_tasks_tools {
                tools.put("tool4",4);
                tools.put("tool6",2);
                
-               wh.define_task("Escacar Pedra", tools);
+               //wh.define_task("Escacar Pedra", tools);
            }
         }
            
          class worker extends Thread{
              public void run(){
                  while(true){
-                     try {
-                         wh.task_request("Escacar Pedra");
-                         System.out.println("toua realizar tasks");
-                         sleep(4000);
-                         wh.task_return("Escacar Pedra");
-                         
-                     } catch (InterruptedException ex) {
-                         ex.printStackTrace();
-                     }
+                     System.out.println("toua realizar tasks");
                  }
              }
          }
