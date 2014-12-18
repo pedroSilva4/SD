@@ -6,11 +6,13 @@
 
 package com.warehouse.server;
 
-import com.warehouse.util.TaskNotFoundException;
-import com.warehouse.tools.WareHouse;
-import com.warehouse.tasks.TaskType;
 import com.warehouse.tasks.Task;
+import com.warehouse.tasks.TaskType;
+import com.warehouse.tools.WareHouse;
+import com.warehouse.util.TaskNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -32,6 +34,7 @@ public class Manager {
     private final Lock tsktype_lock  =new ReentrantLock();
     private final Lock tsk_lock  =new ReentrantLock();
     private final Lock counterLock = new ReentrantLock();
+    private final Lock activeTasksLock = new ReentrantLock();
 
 
     public void lockTskType(){tsktype_lock.lock();}
@@ -139,4 +142,13 @@ public class Manager {
          throw new NotImplementedException();
      }
     **/
+     
+     public List<Task> getActiveTasks() {
+        List l = new ArrayList<Task>();
+        activeTasksLock.lock();
+        try{
+            l.addAll(activeTasks.values());
+        } finally { activeTasksLock.unlock(); }
+        return l;
+     }
 }
