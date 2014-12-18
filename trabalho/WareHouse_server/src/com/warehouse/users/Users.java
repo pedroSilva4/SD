@@ -17,7 +17,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Pedro
  */
 public class Users {
-    private HashMap<String,User> users;
+    private HashMap<String , User> users;
     private List<String> logged;
     
     private final Lock ulock = new ReentrantLock();
