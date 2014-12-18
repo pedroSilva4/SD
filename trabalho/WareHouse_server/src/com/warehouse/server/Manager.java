@@ -141,10 +141,11 @@ public class Manager {
      {
          throw new NotImplementedException();
      }
+     * @return 
     **/
      
      public List<Task> getActiveTasks() {
-        List l = new ArrayList<Task>();
+        List l = new ArrayList<>();
         activeTasksLock.lock();
         try{
             l.addAll(activeTasks.values());
