@@ -6,7 +6,7 @@
 
 package com.warehouse.handlers;
 
-import com.warehouse.server.Manager;
+import com.warehouse.tasks.Manager;
 import com.warehouse.users.Users;
 import java.io.BufferedReader;
 import java.io.IOException;

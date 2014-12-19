@@ -25,11 +25,11 @@ public class Task {
         this.type = t;
         this.user = user;
     }
-    public String getType() {
+    public synchronized String getType() {
        return type.getType();
     }
 
-    public HashMap<String, Integer> getTools() {
+    public synchronized HashMap<String, Integer> getTools() {
        return this.type.getTools();
     }
     

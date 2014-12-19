@@ -6,6 +6,7 @@
 
 package com.warehouse.server;
 
+import com.warehouse.tasks.Manager;
 import com.warehouse.users.Users;
 
 
