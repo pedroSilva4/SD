@@ -12,8 +12,8 @@ package com.warehouse.users;
  */
 public class User {
      
-     private String username;
-     private String password;
+     private final String username;
+     private final String password;
      
      public User(String name, String pass)
      {
@@ -21,8 +21,8 @@ public class User {
          password= pass;
      }
 
-    Object getPassword() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getPassword() {
+        return password;
     }
      
    

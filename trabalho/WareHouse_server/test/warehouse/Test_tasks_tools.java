@@ -4,10 +4,11 @@
  * and open the template in the editor.
  */
 
-package sdproject;
+package warehouse;
 
-import com.sdproject.tools.Tool;
-import com.sdproject.tools.sdproject;
+import com.warehouse.tasks.Manager;
+import com.warehouse.tools.Tool;
+import com.warehouse.tools.*;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +24,7 @@ public class Test_tasks_tools {
      */
     public static void main(String[] args) throws InterruptedException {
         
-        final sdproject wh = new sdproject();
+        final Manager m = new Manager();
         
         class supply extends Thread
         {
@@ -33,7 +34,7 @@ public class Test_tasks_tools {
            {
                for(int i = 0;i<10;i++)
                {
-                   wh.add_tool("tool"+i, 5, true);
+                   m.add_tool("tool"+i, 5, true);
                }
                System.out.println("supply done");
            }
@@ -48,7 +49,7 @@ public class Test_tasks_tools {
                tools.put("tool4",4);
                tools.put("tool6",2);
                
-               //wh.define_task("Escacar Pedra", tools);
+               m.define_task("Escacar Pedra", tools);
            }
         }
            
@@ -63,11 +64,11 @@ public class Test_tasks_tools {
         
        
         
-        class consulter extends Thread {
+       /** class consulter extends Thread {
             @Override
             public void run() {
                 while(true) {
-                    HashMap<String,Tool> inv = wh.get_inventory();
+                    HashMap<String,Tool> inv = m.get_inventory();
                     for(Tool t : inv.values()) {
                         System.out.println("Tool: " + t.getId() + " Quantity: " + t.qtd());
                     }
@@ -80,26 +81,26 @@ public class Test_tasks_tools {
             }
         }
         
-        
+        ***/
         
          supply sp  = new supply();
          sp.start();
          sp.join();
          
-         consulter cs = new consulter();
+        /* consulter cs = new consulter();
          cs.start();
          definer df = new definer();
          df.start();
          df.join();
          worker[] wks = new worker[5];
-         
+       
          
          for(int i = 0;i<5;i++){
          wks[i] = new worker();
          wks[i].start();    
          }
          cs.join();
-         
+         */
         // TODO code application logic here
     }
     

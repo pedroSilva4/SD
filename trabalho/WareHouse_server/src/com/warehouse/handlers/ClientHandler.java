@@ -8,6 +8,7 @@ package com.warehouse.handlers;
 
 import com.warehouse.tasks.Manager;
 import com.warehouse.users.Users;
+import com.warehouse.util.AlreadyRegisteredException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,22 +32,25 @@ public class ClientHandler extends Thread{
     }
     
     public void run()
-    {
-        while(true){
-          
-            try {
-                    InputStreamReader ir = new InputStreamReader(sc.getInputStream());
-                    BufferedReader br = new BufferedReader(ir);
-                    PrintWriter pw = new PrintWriter(sc.getOutputStream());
-                    String s = br.readLine();
-                   
-                    String response = skeleton.parseMassage(s);
-                    
-                    
-                } catch (IOException ex) {
-                    Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
-                }
+    {       
+        try {
+            
+            
+            while(true){
+                
+                InputStreamReader ir = new InputStreamReader(sc.getInputStream());
+                BufferedReader br = new BufferedReader(ir);
+                PrintWriter pw = new PrintWriter(sc.getOutputStream());
+                
+                String s = br.readLine();
+                String response = skeleton.parseMassage(s);
+        
+                pw.println(response);
+                pw.flush();
             }
+        } catch (IOException ex) {
+            Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

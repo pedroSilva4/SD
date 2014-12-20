@@ -6,6 +6,7 @@
 
 package com.warehouse.users;
 
+import com.warehouse.util.AlreadyRegisteredException;
 import com.warehouse.util.AlreadyLoggedException;
 import com.warehouse.util.WrongPasswordException;
 import com.warehouse.util.UserNotFoundException;
@@ -32,13 +33,17 @@ public class Users {
         this.logged = new ArrayList<>();
     }
     
-    public void register(String username, String password)
+    public void register(String username, String password) throws AlreadyRegisteredException
     {
         ulock.lock();
         try{
+            
+            if(this.users.containsKey(username)) throw new AlreadyRegisteredException();
+            
             users.put(username,new User(username,password));
         }
         finally{ulock.unlock();}
+        
     }
     
     public void login(String username, String password) throws UserNotFoundException, WrongPasswordException, AlreadyLoggedException
