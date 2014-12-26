@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.warehouse.server;
+package com.warehouse.tasks;
 
 import com.warehouse.tasks.Task;
 import com.warehouse.tasks.TaskType;
@@ -23,26 +23,26 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Pedro
  */
 public class Manager {
-    
+
     WareHouse wh;
     int nextId = 0;
-    
+
     HashMap<String,TaskType> taskTypes;
     HashMap<Integer,Task> activeTasks;
-    
+
     ///locks!
     private final Lock tsktype_lock  =new ReentrantLock();
     private final Lock tsk_lock  =new ReentrantLock();
     private final Lock counterLock = new ReentrantLock();
-    private final Lock activeTasksLock = new ReentrantLock();
+
 
 
     public void lockTskType(){tsktype_lock.lock();}
     public void unlockTskType(){tsktype_lock.unlock();}
-    
+
     public void lockTsk(){tsk_lock.lock();}
     public void unlockTsk(){tsk_lock.unlock();}
-    
+
     public void clock(){counterLock.lock();}
     public void cunlock(){counterLock.unlock();}
 
@@ -55,7 +55,7 @@ public class Manager {
        }
        finally{unlockTskType();}
     }
-   
+
     public HashMap<String,TaskType> get_taskTypes()
     {
         HashMap<String,TaskType> map;
@@ -65,18 +65,18 @@ public class Manager {
             return map;
         } finally { unlockTskType(); }
     }
-    
+
     public TaskType get_taskType(String name)
     {
         TaskType t;
-        
+
         lockTskType();
         try {
             t = taskTypes.get(name);
             return t;
         } finally { unlockTskType(); }
     }
-    
+
     public int task_request(String taskType,String user) throws InterruptedException
     {
         int id = -1;
@@ -86,69 +86,91 @@ public class Manager {
             id = nextId;
         }
         finally{cunlock();}
-        
+
         TaskType t = null;
-        
+
         lockTskType();
         try{
              t = taskTypes.get(taskType);
         }
         finally{unlockTskType();}
-        
-        Task task = new Task(id,user, t);
-        HashMap<String,Integer> tools  = t.getTools();
+
+        Task task = new Task(id,user, t,this.tsk_lock.newCondition());
+
+        HashMap<String,Integer> tools  = task.getTools();
+
         if(tools==null) return -1;
-        
+
+        //o wharehouse ja tem em si implementado os locks da sua estrutura
         wh.tools_request(tools);
-        
+        //
+
         lockTsk();
         try{
             this.activeTasks.put(id, task);
         }
         finally{unlockTsk();}
-        
+
         return id;
     }
-    
+
     public void task_return(int task_id) throws TaskNotFoundException
     {
         Task t;
         HashMap<String,Integer> tools = null;
-        
+
         lockTsk();
         try{
            tools = activeTasks.get(task_id).getTools();
         }
         finally{unlockTsk();}
-        
+
         if(tools == null) throw new TaskNotFoundException();
-        
+
         wh.tools_return(tools);
-        
+
         lockTsk();
         try{
+           Task ta = activeTasks.get(task_id);
            activeTasks.remove(task_id);
+           ta.signalAll();
         }
-        finally{unlockTsk();}   
+        finally{unlockTsk();}
     }
-    
+
      public void add_tool(String name,int qtt,boolean ret)
      {
          wh.add_tool(name, qtt, ret);
      }
-     
-   /** public int waiton(int[] tasks)
+
+     public int waiton(int[] tasks) throws InterruptedException
      {
-         throw new NotImplementedException();
+         boolean notready =true;
+         lockTsk();
+         try{
+             while(notready){
+                    notready= false;
+                    for(int i : tasks){
+                        if(this.activeTasks.containsKey(i))
+                        {
+                            notready = true;
+                            this.activeTasks.get(i).await();
+                            break;
+                        }
+                    }
+             }
+         }finally{unlockTsk();}
+
+         return 1;
      }
-    **/
-     
+
+
      public List<Task> getActiveTasks() {
         List l = new ArrayList<>();
-        activeTasksLock.lock();
+        lockTsk();
         try{
             l.addAll(activeTasks.values());
-        } finally { activeTasksLock.unlock(); }
+        } finally { unlockTsk(); }
         return l;
      }
 }

@@ -7,6 +7,7 @@
 package com.warehouse.tasks;
 
 import java.util.HashMap;
+import java.util.concurrent.locks.Condition;
 
 /**
  *
@@ -17,20 +18,35 @@ public class Task {
     private int task_id;
     private String user;
     private TaskType type;
+    private Condition c;
 
     
-    public Task(int id,String user, TaskType t)
+    public Task(int id,String user, TaskType t,Condition c)
     {
         this.task_id = id;
         this.type = t;
         this.user = user;
+        this.c = c;
     }
-    public String getType() {
+    public synchronized String getType() {
        return type.getType();
     }
 
-    public HashMap<String, Integer> getTools() {
+    public synchronized HashMap<String, Integer> getTools() {
        return this.type.getTools();
+    }
+    
+    public void await() throws InterruptedException{
+        this.c.await();
+    }
+    
+    public void signal(){
+        this.c.signal();
+    }
+    
+    public void signalAll()
+    {
+        this.c.signalAll();
     }
     
 }
