@@ -19,14 +19,14 @@ public class Server {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // TODO code application logic here
         Users users = new Users();
         Manager manager = new Manager();
         
         ConnectionsHandler conn  = new ConnectionsHandler(50000, users, manager);
-        
-        
+        conn.start();
+        conn.join();
         
         
     }

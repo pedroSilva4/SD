@@ -21,10 +21,12 @@ import com.warehouse.util.WrongPasswordException;
 class WareHouseSkeleton {
     Users users;
     Manager manager;
+    ClientHandler caller;
 
-    WareHouseSkeleton(Users us, Manager m) {
+    WareHouseSkeleton(ClientHandler caller,Users us, Manager m) {
        this.users = us;
        this.manager = m;
+       this.caller = caller;
     }
     
     
@@ -63,7 +65,7 @@ class WareHouseSkeleton {
                     response = "Exception:alreadylogged";
                     break;
                 }
-                
+                caller.username = message[1];
                 response = "login:ok";
                 break;
           }
@@ -73,6 +75,15 @@ class WareHouseSkeleton {
                 response = "logout:ok";
                 break;
           }
+          case "supply":{
+               if(message.length <= 2 || isNumber(message[2])) break;
+               
+               int qtt = Integer.parseInt(message[2]);
+               manager.add_tool(message[1], qtt, true);
+               response = "supply:ok";
+               break;
+          }
+          
           default:{
                 response = "Execption:nosuchmethod";
                 break;
@@ -80,5 +91,17 @@ class WareHouseSkeleton {
       }
       
       return response;
+    }
+    
+    public boolean isNumber(String s){
+        
+        try{
+            int i = Integer.parseInt(s);
+            return true;
+        }catch(NumberFormatException e){
+            return false;
+        }
+        
+        
     }
 }
