@@ -12,8 +12,7 @@ import com.warehouse.util.AlreadyLoggedException;
 import com.warehouse.util.AlreadyRegisteredException;
 import com.warehouse.util.UserNotFoundException;
 import com.warehouse.util.WrongPasswordException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
