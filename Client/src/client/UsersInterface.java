@@ -4,16 +4,12 @@
  * and open the template in the editor.
  */
 
-package com.warehouse.shared;
-
-import com.warehouse.util.AlreadyLoggedException;
-import com.warehouse.util.AlreadyRegisteredException;
-import com.warehouse.util.UserNotFoundException;
-import com.warehouse.util.WrongPasswordException;
+package client;
+import util.*;
 
 /**
  *
- * @author Pedro
+ * @author bruno
  */
 public interface UsersInterface {
      public void login(String username, String password) throws UserNotFoundException, WrongPasswordException, AlreadyLoggedException;

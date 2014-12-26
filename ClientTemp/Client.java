@@ -5,7 +5,7 @@ class Client {
   public static void main(String[] args) {
     String host = args[0];
     int port = Integer.parseInt(args[1]);
-
+    
     try(Socket socket = new Socket(host, port)) {
       BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
       BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
