@@ -6,6 +6,7 @@
 
 package com.warehouse.tasks;
 
+import com.warehouse.shared.ManagerInterface;
 import com.warehouse.tasks.Task;
 import com.warehouse.tasks.TaskType;
 import com.warehouse.tools.WareHouse;
@@ -22,7 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Pedro
  */
-public class Manager {
+public class Manager implements ManagerInterface{
 
     WareHouse wh;
     int nextId = 0;
