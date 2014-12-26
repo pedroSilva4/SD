@@ -144,7 +144,7 @@ public class Manager {
     **/
      
      public List<Task> getActiveTasks() {
-        List l = new ArrayList<Task>();
+        List l = new ArrayList<>();
         activeTasksLock.lock();
         try{
             l.addAll(activeTasks.values());
