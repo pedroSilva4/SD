@@ -34,7 +34,7 @@ public class Manager {
     private final Lock tsktype_lock  =new ReentrantLock();
     private final Lock tsk_lock  =new ReentrantLock();
     private final Lock counterLock = new ReentrantLock();
-    private final Lock activeTasksLock = new ReentrantLock();
+   
 
 
     public void lockTskType(){tsktype_lock.lock();}
@@ -97,11 +97,13 @@ public class Manager {
         
         Task task = new Task(id,user, t,this.tsk_lock.newCondition());
         
-        HashMap<String,Integer> tools  = t.getTools();
+        HashMap<String,Integer> tools  = task.getTools();
         
         if(tools==null) return -1;
         
+        //o wharehouse ja tem em si implementado os locks da sua estrutura
         wh.tools_request(tools);
+        //
         
         lockTsk();
         try{
@@ -141,10 +143,10 @@ public class Manager {
          wh.add_tool(name, qtt, ret);
      }
      
-     public int waiton(int[] tasks)
+     public int waiton(int[] tasks) throws InterruptedException
      {
          boolean notready =true;
-         activeTasksLock.lock();
+         lockTsk();
          try{
              while(notready){
                     notready= false;
@@ -152,11 +154,12 @@ public class Manager {
                         if(this.activeTasks.containsKey(i))
                         {
                             notready = true;
+                            this.activeTasks.get(i).await();
                             break;
                         }
                     }
              }
-         }finally{activeTasksLock.unlock();}
+         }finally{unlockTsk();}
          
          return 1;
      }
@@ -164,10 +167,10 @@ public class Manager {
      
      public List<Task> getActiveTasks() {
         List l = new ArrayList<>();
-        activeTasksLock.lock();
+        lockTsk();
         try{
             l.addAll(activeTasks.values());
-        } finally { activeTasksLock.unlock(); }
+        } finally { unlockTsk(); }
         return l;
      }
 }
