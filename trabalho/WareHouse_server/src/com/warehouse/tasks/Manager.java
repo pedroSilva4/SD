@@ -95,8 +95,10 @@ public class Manager {
         }
         finally{unlockTskType();}
         
-        Task task = new Task(id,user, t);
+        Task task = new Task(id,user, t,this.tsk_lock.newCondition());
+        
         HashMap<String,Integer> tools  = t.getTools();
+        
         if(tools==null) return -1;
         
         wh.tools_request(tools);
@@ -127,7 +129,9 @@ public class Manager {
         
         lockTsk();
         try{
+           Task ta = activeTasks.get(task_id);
            activeTasks.remove(task_id);
+           ta.signalAll();
         }
         finally{unlockTsk();}   
     }
@@ -137,12 +141,26 @@ public class Manager {
          wh.add_tool(name, qtt, ret);
      }
      
-   /** public int waiton(int[] tasks)
+     public int waiton(int[] tasks)
      {
-         throw new NotImplementedException();
+         boolean notready =true;
+         activeTasksLock.lock();
+         try{
+             while(notready){
+                    notready= false;
+                    for(int i : tasks){
+                        if(this.activeTasks.containsKey(i))
+                        {
+                            notready = true;
+                            break;
+                        }
+                    }
+             }
+         }finally{activeTasksLock.unlock();}
+         
+         return 1;
      }
-     * @return 
-    **/
+    
      
      public List<Task> getActiveTasks() {
         List l = new ArrayList<>();
