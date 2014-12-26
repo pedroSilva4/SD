@@ -6,6 +6,7 @@
 
 package com.warehouse.users;
 
+import com.warehouse.shared.UsersInterface;
 import com.warehouse.util.AlreadyRegisteredException;
 import com.warehouse.util.AlreadyLoggedException;
 import com.warehouse.util.WrongPasswordException;
@@ -20,7 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Pedro
  */
-public class Users {
+public class Users implements UsersInterface{
     private HashMap<String , User> users;
     private List<String> logged;
     
