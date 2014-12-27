@@ -76,7 +76,7 @@ public class WareHouse {
                     for(String s: tools.keySet()){
                             t = getTool(s);
                         
-                            if(tools.get(s) >= t.qtd()){
+                            if(tools.get(s) > t.qtd()){
                                          notready=true;
                                          t.await();
                                          break;

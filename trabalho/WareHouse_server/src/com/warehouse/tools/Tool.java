@@ -51,7 +51,7 @@ public class Tool {
         this.returnable = true; 
     }
     
-    public String getId() {
+    public synchronized String getId() {
       return this.tool_name;  
     }
         
@@ -70,22 +70,22 @@ public class Tool {
         this.tl_condition.signalAll();
     }
     
-    public int qtd()
+    public synchronized int qtd()
     {
         return this.quantity;
     }
     
-    public void dec(int qtd)
+    public synchronized void dec(int qtd)
     {
         this.quantity-=qtd;
     }
     
-    public void inc(int qtd)
+    public synchronized void inc(int qtd)
     {
         this.quantity+=qtd;
     }
     
-    public boolean is_returnable()
+    public synchronized boolean is_returnable()
     {
         return this.returnable;
     }

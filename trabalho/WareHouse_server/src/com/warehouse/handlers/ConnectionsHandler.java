@@ -38,6 +38,7 @@ public class ConnectionsHandler extends Thread{
         ServerSocket ss;
         try {
             ss = new ServerSocket(port);
+            System.out.println("Server initialized on port : "+port);
             
             while(true){
                Socket sc = ss.accept();
