@@ -24,7 +24,7 @@ public class Server {
         Users users = new Users();
         Manager manager = new Manager();
         
-        ConnectionsHandler conn  = new ConnectionsHandler(50000, users, manager);
+        ConnectionsHandler conn  = new ConnectionsHandler(80, users, manager);
         conn.start();
         conn.join();
         

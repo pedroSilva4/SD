@@ -8,6 +8,7 @@ package com.warehouse.shared;
 
 import com.warehouse.tasks.Task;
 import com.warehouse.tasks.TaskType;
+import com.warehouse.util.TaskAlreadyDefinedException;
 import com.warehouse.util.TaskNotFoundException;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 public interface ManagerInterface {
      
-     public void define_task(String name,HashMap<String,Integer> tools);
+     public void define_task(String name,HashMap<String,Integer> tools) throws TaskAlreadyDefinedException;
      public HashMap<String,TaskType> get_taskTypes();
      public TaskType get_taskType(String name);
      public int task_request(String taskType,String user) throws InterruptedException;
