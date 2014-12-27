@@ -49,6 +49,7 @@ public class Manager implements ManagerInterface{
     public void cunlock(){counterLock.unlock();}
 
     //metodos
+    @Override
     public void define_task(String name,HashMap<String,Integer> tools) throws TaskAlreadyDefinedException
     {
        lockTskType();
@@ -59,6 +60,7 @@ public class Manager implements ManagerInterface{
        finally{unlockTskType();}
     }
 
+    @Override
     public HashMap<String,TaskType> get_taskTypes()
     {
         HashMap<String,TaskType> map;
@@ -69,6 +71,7 @@ public class Manager implements ManagerInterface{
         } finally { unlockTskType(); }
     }
 
+    @Override
     public TaskType get_taskType(String name)
     {
         TaskType t;
