@@ -3,6 +3,8 @@ import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lib.*;
 import util.*;
 
@@ -17,7 +19,8 @@ import util.*;
  * @author bruno
  */
 class WarehouseStub implements ManagerInterface, UsersInterface {
-
+    
+    private String returnStr;
     final Socket socket;
     final BufferedReader in;
     final PrintWriter out;
@@ -26,6 +29,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         this.socket = new Socket(host, port);
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream());
+        this.returnStr = "";
     }
     
     @Override
@@ -85,8 +89,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
                     throw new UserNotFoundException();
             }
             
-        } catch(IOException e) { e.printStackTrace(); }
-        
+        } catch(IOException e) { e.printStackTrace(); }  
     }
 
     @Override
@@ -104,9 +107,97 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
 
     @Override
     public void logout(String username) {
-        String msg = "logout";
+        String msg = "logout:username";
         out.println(msg);
         out.flush();
+        
+        try {
+            String response = in.readLine();
+            if(response.equals("logout:ok"))
+                socket.close();
+        } catch(IOException e) {e.printStackTrace(); }
+    }
+    
+    public String parseMessage(String msg) {
+        String message[] = msg.split(" ");
+        String response = null;
+        if(message.length < 1) return null;
+        
+        String command = message[0];
+        
+        switch(command) {
+            case "register":
+                try {
+                    register(message[1], message[2]);
+                } catch (AlreadyRegisteredException ex) {
+                    ex.printStackTrace();
+                }
+                break;
+            case "login":
+                try {
+                    login(message[1], message[2]);
+                } catch (UserNotFoundException ex) {
+                    ex.printStackTrace();
+                } catch (WrongPasswordException ex) {
+                    ex.printStackTrace();
+                } catch (AlreadyLoggedException ex) {
+                    ex.printStackTrace();
+                }
+                break;
+            case "logout":
+                logout(message[1]);
+                break;
+            case "activity":
+                getActiveTasks();
+                break;
+            case "wait_for":
+                int[] tasks = new int[message.length - 1];
+                for(int i = 1; i < message.length; i++)
+                    tasks[i] = Integer.parseInt(message[i]);
+                try {
+                    waiton(tasks);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                break;
+            case "supply":
+                add_tool(message[1], Integer.parseInt(message[2]), Boolean.parseBoolean(message[3]));
+                break;
+            case "completed":
+                try {
+                    task_return(Integer.parseInt(message[1]));
+                } catch (TaskNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+                break;
+            case "request":
+                try {
+                    task_request(message[1], message[2]);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                break;
+            case "type":
+                if(message[1] == null)
+                    get_taskTypes();
+                else
+                    get_taskType(message[1]);
+                break;
+            case "define":
+                HashMap<String, Integer> tools = new HashMap<>();
+                for(int i = 2; i < message.length; i++) {
+                    String aux[] = message[i].split(":");
+                    String tool = aux[0];
+                    int quantity = Integer.parseInt(aux[1]);
+                    tools.put(tool, quantity);
+                }
+                define_task(message[1], tools);
+                break;
+            default:
+                returnStr = "Say whaaaaat?";
+        }
+        
+        return returnStr;
     }
 
 }
