@@ -1,6 +1,7 @@
 package client;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,7 +35,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
     
     @Override
     public void define_task(String name, HashMap<String, Integer> tools) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//        String msg = "definetask:" + name + 
     }
 
     @Override
@@ -59,7 +60,15 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
 
     @Override
     public void add_tool(String name, int qtt, boolean ret) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String msg = "supply:" + name + qtt;
+        out.println(msg);
+        out.flush();
+        
+        try {
+            String response = in.readLine();
+            if(response.equals("supply:ok"))
+                returnStr = "Supply successful!";
+        } catch(IOException e) {e.printStackTrace(); }
     }
 
     @Override
@@ -68,8 +77,10 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
     }
 
     @Override
-    public List<lib.Task> getActiveTasks() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Task> getActiveTasks() {
+//        String msg = ""
+        List list = new ArrayList<>();
+        return list;
     }
 
     @Override
@@ -148,7 +159,13 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
                 logout(message[1]);
                 break;
             case "activity":
-                getActiveTasks();
+                List l = new ArrayList<>();
+                l = getActiveTasks();
+                returnStr = "Activity\n";
+                for (Object l1 : l) {
+                    Task t = (Task) l1;
+                    returnStr += t.toString();
+                }
                 break;
             case "wait_for":
                 int[] tasks = new int[message.length - 1];

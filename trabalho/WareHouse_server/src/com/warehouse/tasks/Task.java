@@ -49,4 +49,17 @@ public class Task {
         this.c.signalAll();
     }
     
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append(task_id);
+        sb.append("\t");
+        sb.append(type);
+        sb.append("\t");
+        sb.append(user);
+        sb.append("\n");
+        
+        return sb.toString();
+    }
 }
