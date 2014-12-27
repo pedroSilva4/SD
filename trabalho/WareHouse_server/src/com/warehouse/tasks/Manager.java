@@ -6,6 +6,7 @@
 
 package com.warehouse.tasks;
 
+import com.warehouse.util.TaskAlreadyDefinedException;
 import com.warehouse.shared.ManagerInterface;
 import com.warehouse.tasks.Task;
 import com.warehouse.tasks.TaskType;
@@ -48,10 +49,11 @@ public class Manager implements ManagerInterface{
     public void cunlock(){counterLock.unlock();}
 
     //metodos
-    public void define_task(String name,HashMap<String,Integer> tools)
+    public void define_task(String name,HashMap<String,Integer> tools) throws TaskAlreadyDefinedException
     {
        lockTskType();
        try{
+           if(taskTypes.containsKey(name)) throw new TaskAlreadyDefinedException();
            taskTypes.put(name,new TaskType(name, tools));
        }
        finally{unlockTskType();}
