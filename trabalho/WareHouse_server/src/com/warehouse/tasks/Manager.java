@@ -100,18 +100,19 @@ public class Manager implements ManagerInterface{
         finally{cunlock();}
 
         TaskType t = null;
-
+        HashMap<String,Integer> tools = null;
         lockTskType();
         try{
              t = taskTypes.get(taskType);
         }
         finally{unlockTskType();}
-
-        Task task = new Task(id,user, t,this.tsk_lock.newCondition());
-
-        HashMap<String,Integer> tools  = task.getTools();
-
+        if(t==null) return -1;
+        
+        tools = t.getTools();
+        
         if(tools==null) return -1;
+        
+        Task task = new Task(id,user, t,this.tsk_lock.newCondition());
 
         //o wharehouse ja tem em si implementado os locks da sua estrutura
         wh.tools_request(tools);

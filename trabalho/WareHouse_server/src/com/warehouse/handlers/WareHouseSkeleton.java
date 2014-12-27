@@ -12,6 +12,7 @@ import com.warehouse.users.Users;
 import com.warehouse.util.AlreadyLoggedException;
 import com.warehouse.util.AlreadyRegisteredException;
 import com.warehouse.util.TaskAlreadyDefinedException;
+import com.warehouse.util.TaskNotFoundException;
 import com.warehouse.util.UserNotFoundException;
 import com.warehouse.util.WrongPasswordException;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ class WareHouseSkeleton {
     
     public String parseMassage(String m)
     {
+      System.out.println(m);
       String message[] = m.split(":");
       String response = null;
       if(message.length < 1) return null;
@@ -109,18 +111,44 @@ class WareHouseSkeleton {
                }
                if(response!=null) break;
     
-                try {
+               try {
                      manager.define_task(taskname, tools);
                      response = "definetask:ok";
                      break;
 
-                } catch (TaskAlreadyDefinedException ex) {
+               } catch (TaskAlreadyDefinedException ex) {
                     response = "Exception:taskalreadydefined";
                     break;
-                }
-               
-              
+               }  
           }
+          case "taskrequest":{
+               if(message.length<=2)break;
+               String taskType = message[1];
+               String username = message[2];
+               try {
+                         int task_request = manager.task_request(taskType, username);
+                         response = ""+task_request;
+                         break;
+
+               }catch (InterruptedException ex) {
+                    response = "-1";
+                    break;
+               }
+          }
+          case "taskreturn":{
+              if( message.length<=1 || !isNumber(message[1])) break;
+              int task_id = Integer.parseInt(message[1]);
+              try {
+                    manager.task_return(task_id);
+                    response = "taskreturn:ok";
+                    break;
+              } catch (TaskNotFoundException ex) {
+                    response = "Exception:tasknotfound";
+                    break;
+
+              }
+          }
+          
           default:{
                 response = "Exception:nosuchmethod";
                 break;
