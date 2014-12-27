@@ -48,6 +48,12 @@ public class Manager implements ManagerInterface{
     public void clock(){counterLock.lock();}
     public void cunlock(){counterLock.unlock();}
 
+    public Manager()
+    {
+        this.activeTasks = new HashMap<>();
+        this.taskTypes = new HashMap<>();
+        this.wh = new WareHouse();
+    }
     //metodos
     @Override
     public void define_task(String name,HashMap<String,Integer> tools) throws TaskAlreadyDefinedException
