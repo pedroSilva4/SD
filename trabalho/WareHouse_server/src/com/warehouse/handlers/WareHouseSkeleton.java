@@ -85,7 +85,7 @@ class WareHouseSkeleton {
           }
           
           default:{
-                response = "Execption:nosuchmethod";
+                response = "Exception:nosuchmethod";
                 break;
           }
       }
