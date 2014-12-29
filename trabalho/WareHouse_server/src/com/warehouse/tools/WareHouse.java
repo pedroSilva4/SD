@@ -34,9 +34,15 @@ public class WareHouse {
     {
         lockInv();
         try{
-            Tool tool = new Tool(name, qtt, inv_lock.newCondition(),ret);
-            inventory.put(name, tool);
-            
+            Tool tool = null;
+            if(this.inventory.containsKey(name)){
+                    tool = inventory.get(name);
+                    tool.inc(qtt);
+            }
+            else{
+                    tool = new Tool(name, qtt, inv_lock.newCondition(),ret);
+                    inventory.put(name, tool);
+            }
             tool.signalAll();//ver qual a melhor solução para isto
         }
         finally{unlockInv();}
