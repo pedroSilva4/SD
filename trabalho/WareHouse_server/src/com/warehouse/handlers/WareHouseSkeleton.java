@@ -11,6 +11,8 @@ import com.warehouse.util.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -184,6 +186,28 @@ public class WareHouseSkeleton {
                 response = "";
                 for (Task t : tasks) {
                     response += t.get_Id() + ":" + t.getType() + ":" + t.getUsername() + ";";
+                }
+                break;
+            }
+            case "waitfor":{
+                boolean b = true;
+                int[] tasks_ids = new int[message.length-1];
+                for(int i=1;i<message.length;i++){
+                    if(!isNumber(message[i])){
+                        response = "Exception:wrongargumentsformat";
+                        b=false;
+                        break;
+                    }
+                    tasks_ids[i-1]=Integer.parseInt(message[i]);
+                }
+                try {
+                    if(b){
+                    manager.waiton(tasks_ids);
+                    response = "waitfor:alltasksterminated";
+                    break;
+                    }
+                } catch (InterruptedException ex) {
+                    response =  null;
                 }
                 break;
             }
