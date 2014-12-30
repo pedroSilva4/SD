@@ -7,6 +7,9 @@
 package com.warehouse.handlers;
 
 import com.warehouse.tasks.Manager;
+import com.warehouse.tasks.Task;
+import com.warehouse.tasks.TaskType;
+import com.warehouse.tools.Tool;
 import com.warehouse.users.Users;
 import com.warehouse.util.AlreadyLoggedException;
 import com.warehouse.util.AlreadyRegisteredException;
@@ -14,6 +17,7 @@ import com.warehouse.util.TaskAlreadyDefinedException;
 import com.warehouse.util.TaskNotFoundException;
 import com.warehouse.util.UserNotFoundException;
 import com.warehouse.util.WrongPasswordException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -21,7 +25,7 @@ import java.util.HashMap;
  *
  * @author Pedro
  */
-class WareHouseSkeleton {
+public class WareHouseSkeleton {
     Users users;
     Manager manager;
     ClientHandler caller;
@@ -144,7 +148,27 @@ class WareHouseSkeleton {
 
               }
           }
-          
+          case "list":{
+              ArrayList<TaskType> types = (ArrayList<TaskType>) manager.get_taskTypes().values();
+              response = "";
+              for(TaskType t : types){
+                  response+=t.getType();
+                  for(String s : t.getTools().keySet()){
+                      response+=":"+s+":"+t.getTools().get(s);
+                  }
+                  response+="|";
+              }
+              break;
+              
+          }
+          case "activity":{
+             ArrayList<Task> tasks = (ArrayList<Task>) manager.getActiveTasks();
+             response = "";
+             for(Task t: tasks){
+                 response+=t.get_Id()+":"+t.getType()+":"+t.getUsername()+"|";
+             }
+             break;
+          }
           default:{
                 response = "Exception:nosuchmethod";
                 break;

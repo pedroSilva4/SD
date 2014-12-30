@@ -9,6 +9,9 @@ package com.warehouse.server;
 import com.warehouse.handlers.ConnectionsHandler;
 import com.warehouse.tasks.Manager;
 import com.warehouse.users.Users;
+import com.warehouse.util.InitThread;
+import com.warehouse.util.Log;
+import java.io.File;
 
 /**
  *
@@ -23,6 +26,12 @@ public class Server {
         // TODO code application logic here
         Users users = new Users();
         Manager manager = new Manager();
+        
+        Log logger = new Log();
+        
+        InitThread init = new InitThread(logger, manager, users);
+        init.start();
+        init.join();
         
         ConnectionsHandler conn  = new ConnectionsHandler(50000, users, manager);
         conn.start();
