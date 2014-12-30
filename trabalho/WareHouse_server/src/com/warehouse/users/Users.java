@@ -22,18 +22,19 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Pedro
  */
 public class Users implements UsersInterface{
-    private HashMap<String , User> users;
-    private List<String> logged;
+    private final HashMap<String , User> users;
+    private final List<String> logged;
     
     private final Lock ulock = new ReentrantLock();
     private final Lock llock = new ReentrantLock();
    
     public Users()
     {
-        this.users = new HashMap<String, User>();
+        this.users = new HashMap<>();
         this.logged = new ArrayList<>();
     }
     
+    @Override
     public void register(String username, String password) throws AlreadyRegisteredException
     {
         ulock.lock();
