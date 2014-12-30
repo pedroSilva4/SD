@@ -31,6 +31,14 @@ public class Task {
     public synchronized String getType() {
        return type.getType();
     }
+    
+    public synchronized int get_Id(){
+        return this.task_id;
+    }
+    
+    public synchronized String getUsername(){
+        return this.user;
+    }
 
     public synchronized HashMap<String, Integer> getTools() {
        return this.type.getTools();
