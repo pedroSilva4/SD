@@ -120,7 +120,7 @@ public class WareHouseSkeleton {
                 try {
                     manager.define_task(taskname, tools);
                     //escrever no cenas
-                    
+                    new Save2FileThread(m,caller.logger.taskPw).start();
                     response = "definetask:ok";
                     break;
 
@@ -139,6 +139,7 @@ public class WareHouseSkeleton {
                     int task_request = manager.task_request(taskType, username);
                     response = "" + task_request;
                     //escrever no cenas
+                    new Save2FileThread(m,caller.logger.taskPw).start();
                     break;
 
                 } catch (InterruptedException ex) {
@@ -155,6 +156,7 @@ public class WareHouseSkeleton {
                     manager.task_return(task_id);
                     response = "taskreturn:ok";
                     //escrever no cenas
+                    new Save2FileThread(m,caller.logger.taskPw).start();
                     break;
                 } catch (TaskNotFoundException ex) {
                     response = "Exception:tasknotfound";
