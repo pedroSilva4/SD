@@ -8,14 +8,11 @@ package com.warehouse.handlers;
 
 import com.warehouse.tasks.Manager;
 import com.warehouse.users.Users;
-import com.warehouse.util.AlreadyRegisteredException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -24,14 +21,14 @@ import java.util.logging.Logger;
 public class ClientHandler extends Thread{
     private Socket sc;
     private WareHouseSkeleton skeleton;
-    private String adress;
+    private String address;
     String username;
     
     public ClientHandler(Socket sc,Users us,Manager m)
     {
         this.sc  = sc;
         skeleton = new WareHouseSkeleton(this,us,m);
-        adress = sc.getInetAddress().getHostAddress();
+        address = sc.getInetAddress().getHostAddress();
     }
     
     public void run()
@@ -55,11 +52,11 @@ public class ClientHandler extends Thread{
             }
             sc.close();
             String  r = skeleton.parseMassage("logout:"+username);
-            System.out.println("Client "+username+" on : "+adress+ " disconnected,"+r);
+            System.out.println("Client "+username+" on : "+address+ " disconnected,"+r);
             
         } catch (IOException ex) {
             String  r = skeleton.parseMassage("logout:"+username);
-            System.out.println("Client "+username+" on : "+adress+ " disconnected,"+r);
+            System.out.println("Client "+username+" on : "+address+ " disconnected,"+r);
         }
     }
     

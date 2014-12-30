@@ -7,7 +7,6 @@
 package com.warehouse.handlers;
 
 import com.warehouse.tasks.Manager;
-import com.warehouse.tasks.TaskType;
 import com.warehouse.users.Users;
 import com.warehouse.util.AlreadyLoggedException;
 import com.warehouse.util.AlreadyRegisteredException;
@@ -15,10 +14,7 @@ import com.warehouse.util.TaskAlreadyDefinedException;
 import com.warehouse.util.TaskNotFoundException;
 import com.warehouse.util.UserNotFoundException;
 import com.warehouse.util.WrongPasswordException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 /**

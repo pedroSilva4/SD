@@ -9,6 +9,7 @@ package warehouse;
 import com.warehouse.tasks.Manager;
 import com.warehouse.tools.Tool;
 import com.warehouse.tools.*;
+import com.warehouse.util.TaskAlreadyDefinedException;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,7 +50,11 @@ public class Test_tasks_tools {
                tools.put("tool4",4);
                tools.put("tool6",2);
                
-               m.define_task("Escacar Pedra", tools);
+               try {
+                   m.define_task("Escacar Pedra", tools);
+               } catch (TaskAlreadyDefinedException ex) {
+                   Logger.getLogger(Test_tasks_tools.class.getName()).log(Level.SEVERE, null, ex);
+               }
            }
         }
            

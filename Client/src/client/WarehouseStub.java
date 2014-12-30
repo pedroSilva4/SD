@@ -4,8 +4,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lib.*;
 import util.*;
 
@@ -25,6 +23,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
     final Socket socket;
     final BufferedReader in;
     final PrintWriter out;
+    private String user;
     
     public WarehouseStub(String host, int port) throws IOException {
         this.socket = new Socket(host, port);
@@ -50,7 +49,17 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
 
     @Override
     public int task_request(String taskType, String user) throws InterruptedException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String msg = "taskrequest:" + taskType + ":" + user;
+        out.println(msg);
+        out.flush();
+        
+        try {
+            String response = in.readLine();
+            if(!response.equals("-1"))
+                return Integer.parseInt(response);
+        } catch(IOException e) { e.printStackTrace(); }
+        
+        return -1;
     }
 
     @Override
@@ -68,7 +77,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
             String response = in.readLine();
             if(response.equals("supply:ok"))
                 returnStr = "Supply successful!";
-        } catch(IOException e) {e.printStackTrace(); }
+        } catch(IOException e) { e.printStackTrace(); }
     }
 
     @Override
@@ -116,9 +125,8 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         } catch(IOException e) {e.printStackTrace(); }
     }
 
-    @Override
-    public void logout(String username) {
-        String msg = "logout:username";
+    public void logout() {
+        String msg = "logout:" + user;
         out.println(msg);
         out.flush();
         
@@ -140,23 +148,27 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
             case "register":
                 try {
                     register(message[1], message[2]);
+                    returnStr = "Register successful";
                 } catch (AlreadyRegisteredException ex) {
-                    ex.printStackTrace();
+//                    ex.printStackTrace();
+                    returnStr = "The username " + message[1] + " already exists!"; 
                 }
                 break;
             case "login":
+                user = message[1];
                 try {
-                    login(message[1], message[2]);
+                    login(user, message[2]);
                 } catch (UserNotFoundException ex) {
-                    ex.printStackTrace();
-                } catch (WrongPasswordException ex) {
-                    ex.printStackTrace();
+//                    ex.printStackTrace();
+                    returnStr = user + " not found!";
                 } catch (AlreadyLoggedException ex) {
-                    ex.printStackTrace();
+                    returnStr = user + " already logged in!";
+                } catch (WrongPasswordException ex) {
+                    returnStr = "Wrong password!";
                 }
                 break;
             case "logout":
-                logout(message[1]);
+                logout();
                 break;
             case "activity":
                 List l = new ArrayList<>();
@@ -184,7 +196,8 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
                 try {
                     task_return(Integer.parseInt(message[1]));
                 } catch (TaskNotFoundException ex) {
-                    ex.printStackTrace();
+//                    ex.printStackTrace();
+                    returnStr = "Task not found!";
                 }
                 break;
             case "request":
@@ -212,6 +225,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
                 break;
             default:
                 returnStr = "Say whaaaaat?";
+                break;
         }
         
         return returnStr;
