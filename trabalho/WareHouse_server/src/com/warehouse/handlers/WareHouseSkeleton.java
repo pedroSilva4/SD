@@ -13,11 +13,13 @@ import com.warehouse.tools.Tool;
 import com.warehouse.users.Users;
 import com.warehouse.util.AlreadyLoggedException;
 import com.warehouse.util.AlreadyRegisteredException;
+import com.warehouse.util.Save2FileThread;
 import com.warehouse.util.TaskAlreadyDefinedException;
 import com.warehouse.util.TaskNotFoundException;
 import com.warehouse.util.UserNotFoundException;
 import com.warehouse.util.WrongPasswordException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 
@@ -50,7 +52,8 @@ public class WareHouseSkeleton {
                 
                 try {
                     users.register(message[1], message[2]);
-
+                    //escrever no cenas
+                    new Save2FileThread(m, caller.logger.usrPw).start();
                 } catch (AlreadyRegisteredException ex) {
                     response = "Exception:alreadyregistered";
                     break;
@@ -88,6 +91,8 @@ public class WareHouseSkeleton {
                
                int qtt = Integer.parseInt(message[2]);
                manager.add_tool(message[1], qtt, true);
+               //escrever no cenas
+                new Save2FileThread(m, caller.logger.toolsPw).start();
                response = "supply:ok";
                break;
           }
@@ -113,6 +118,7 @@ public class WareHouseSkeleton {
     
                try {
                      manager.define_task(taskname, tools);
+                     //escrever no cenas
                      response = "definetask:ok";
                      break;
 
@@ -128,6 +134,7 @@ public class WareHouseSkeleton {
                try {
                          int task_request = manager.task_request(taskType, username);
                          response = ""+task_request;
+                         //escrever no cenas
                          break;
 
                }catch (InterruptedException ex) {
@@ -141,6 +148,7 @@ public class WareHouseSkeleton {
               try {
                     manager.task_return(task_id);
                     response = "taskreturn:ok";
+                    //escrever no cenas
                     break;
               } catch (TaskNotFoundException ex) {
                     response = "Exception:tasknotfound";
@@ -149,15 +157,17 @@ public class WareHouseSkeleton {
               }
           }
           case "list":{
-              ArrayList<TaskType> types = (ArrayList<TaskType>) manager.get_taskTypes().values();
+              Collection<TaskType> types =  manager.get_taskTypes().values();
               response = "";
               for(TaskType t : types){
                   response+=t.getType();
                   for(String s : t.getTools().keySet()){
                       response+=":"+s+":"+t.getTools().get(s);
                   }
-                  response+="|";
+                  response+=";";
+                 
               }
+              System.out.println(response);
               break;
               
           }
@@ -165,7 +175,7 @@ public class WareHouseSkeleton {
              ArrayList<Task> tasks = (ArrayList<Task>) manager.getActiveTasks();
              response = "";
              for(Task t: tasks){
-                 response+=t.get_Id()+":"+t.getType()+":"+t.getUsername()+"|";
+                 response+=t.get_Id()+":"+t.getType()+":"+t.getUsername()+";";
              }
              break;
           }

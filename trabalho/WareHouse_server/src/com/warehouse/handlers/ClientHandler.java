@@ -8,6 +8,7 @@ package com.warehouse.handlers;
 
 import com.warehouse.tasks.Manager;
 import com.warehouse.users.Users;
+import com.warehouse.util.Log;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,16 +20,18 @@ import java.net.Socket;
  * @author Pedro
  */
 public class ClientHandler extends Thread{
-    private Socket sc;
-    private WareHouseSkeleton skeleton;
-    private String address;
+    private final Socket sc;
+    private final WareHouseSkeleton skeleton;
+    private final String address;
     String username;
+    public Log logger;
     
-    public ClientHandler(Socket sc,Users us,Manager m)
+    public ClientHandler(Socket sc,Users us,Manager m,Log logger)
     {
         this.sc  = sc;
         skeleton = new WareHouseSkeleton(this,us,m);
         address = sc.getInetAddress().getHostAddress();
+        this.logger = logger;
     }
     
     public void run()

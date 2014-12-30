@@ -33,7 +33,7 @@ public class Server {
         init.start();
         init.join();
         
-        ConnectionsHandler conn  = new ConnectionsHandler(50000, users, manager);
+        ConnectionsHandler conn  = new ConnectionsHandler(50000, users, manager,logger);
         conn.start();
         conn.join();
         

@@ -8,6 +8,7 @@ package com.warehouse.handlers;
 
 import com.warehouse.tasks.Manager;
 import com.warehouse.users.Users;
+import com.warehouse.util.Log;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -23,11 +24,12 @@ public class ConnectionsHandler extends Thread{
     private final Users users;
     private final Manager manager;
     private boolean run;
-    
-    public ConnectionsHandler(int port,Users u, Manager m){
+    private Log logger;
+    public ConnectionsHandler(int port,Users u, Manager m,Log logger){
         this.manager = m;
         this.users = u;
         this.port = port;
+        this.logger = logger;
       
     }
     
@@ -43,7 +45,7 @@ public class ConnectionsHandler extends Thread{
             while(true){
                Socket sc = ss.accept();
                try{
-               new ClientHandler(sc, users, manager).start();
+               new ClientHandler(sc, users, manager,logger).start();
                }catch(Exception e1){
                    System.out.println(e1.getMessage());
                }

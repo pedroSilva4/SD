@@ -6,15 +6,14 @@
 
 package com.warehouse.util;
 
-import com.warehouse.tasks.Task;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,6 +30,11 @@ public class Log {
     public BufferedReader usrbr;
     public BufferedReader toolsbr;
     public BufferedReader tasksbr;
+    
+    public PrintWriter usrPw ;
+    public PrintWriter toolsPw ;
+    public PrintWriter taskPw;
+    
     
     
     public Log() {
@@ -64,7 +68,14 @@ public class Log {
             usrbr = new BufferedReader(new FileReader(users));
             toolsbr = new BufferedReader(new FileReader(tools));
             tasksbr = new BufferedReader(new FileReader(tasks));
+            
+            usrPw = new PrintWriter(new BufferedWriter(new FileWriter(users, true)));
+            toolsPw = new PrintWriter(new BufferedWriter(new FileWriter(tools, true)));
+            taskPw = new PrintWriter(new BufferedWriter(new FileWriter(tasks, true)));
+    
         } catch (FileNotFoundException ex) {
+            Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
         }
         
