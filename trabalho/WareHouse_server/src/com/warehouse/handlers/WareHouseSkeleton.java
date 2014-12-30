@@ -120,6 +120,7 @@ public class WareHouseSkeleton {
                 try {
                     manager.define_task(taskname, tools);
                     //escrever no cenas
+                    
                     response = "definetask:ok";
                     break;
 
