@@ -6,9 +6,6 @@
 
 package lib;
 
-import java.util.HashMap;
-import java.util.concurrent.locks.Condition;
-
 /**
  *
  * @author Pedro
@@ -17,36 +14,24 @@ public class Task {
     
     private int task_id;
     private String user;
-    private TaskType type;
-    private Condition c;
-
+    private String type;
     
-    public Task(int id,String user, TaskType t,Condition c)
+    public Task(int id, String user, String type)
     {
         this.task_id = id;
-        this.type = t;
+        this.type = type;
         this.user = user;
-        this.c = c;
-    }
-    public synchronized String getType() {
-       return type.getType();
-    }
-
-    public synchronized HashMap<String, Integer> getTools() {
-       return this.type.getTools();
     }
     
-    public void await() throws InterruptedException{
-        this.c.await();
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        
+        sb.append("\tTask ID: ").append(task_id);
+        sb.append("\tTask: ").append(type);
+        sb.append("\tUser: ").append(user);
+        sb.append("\n");
+                
+        return sb.toString();
     }
-    
-    public void signal(){
-        this.c.signal();
-    }
-    
-    public void signalAll()
-    {
-        this.c.signalAll();
-    }
-    
 }

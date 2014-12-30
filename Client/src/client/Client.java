@@ -15,36 +15,41 @@ import java.io.InputStreamReader;
  * @author bruno
  */
 public class Client {
-  public static void main(String[] args) {
-    String host = args[0];
-    int port = Integer.parseInt(args[1]);
+
+    public static void main(String[] args) {
+        String host = args[0];
+        int port = Integer.parseInt(args[1]);
+
+        Parser parser = new Parser();
+        WarehouseStub stub = null;
+        String input = "";
     
-    WarehouseStub stub = null;
-    String input = "";
-    
-    try {
-        stub = new WarehouseStub(host, port);
-    } catch (IOException ex) {
-        ex.printStackTrace();
-    }
-    
-    BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
-    
-    while(true) {
-        try {
-            input = stdin.readLine();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+
+        while(true) {
+            try {
+                input = stdin.readLine();
+                
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            
+            try {
+                stub = new WarehouseStub(host, port);
+                String ret = parser.parseAndCall(input, stub, false);
+                System.out.println("Response: " + ret);
+                if(ret.equals("Login successful!")) {
+                    while(true) {
+                         input = stdin.readLine();
+                         ret = parser.parseAndCall(input, stub, true);
+                         System.out.println("> " + ret);
+                         if(ret.equals("Goodbye =)"))
+                             break;
+                    }
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }            
         }
-        
-        if(input == null) {
-            stub.logout();
-            break;
-        }
-        
-        String ret = stub.parseMessage(input);
-        
-        System.out.println("Response: " + ret);
-    }
   }  
 }
