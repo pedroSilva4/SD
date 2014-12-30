@@ -1,7 +1,6 @@
 package client;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import lib.Task;
@@ -56,6 +55,7 @@ public class Parser {
                 break;
             case "quit":
                 stub.quit();
+                returnStr = "Goodbye =)";
                 break;
             default:
                 returnStr = "Please login/register!";
@@ -66,15 +66,18 @@ public class Parser {
                 
             case "logout":
                 stub.logout(user);
-                returnStr = "Goodbye =)";
+                returnStr = "Logged out!";
                 break;
             case "activity":
-                List l = new ArrayList<>();
-                l = stub.getActiveTasks();
-                returnStr = "\nActivity\n";
-                for (Object l1 : l) {
-                    Task t = (Task) l1;
-                    returnStr += t.toString();
+                List l = stub.getActiveTasks();
+                if(l == null)
+                    returnStr = "No activity at the moment!";
+                else {
+                    returnStr = "\nActivity:\n";
+                    for (Object l1 : l) {
+                        Task t = (Task) l1;
+                        returnStr += t.toString();
+                    }
                 }
                 break;
             case "wait_for":
@@ -99,7 +102,7 @@ public class Parser {
                 break;
             case "request":
                 try {
-                    stub.task_request(message[1], message[2]);
+                    stub.task_request(message[1], user);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -120,6 +123,10 @@ public class Parser {
                     tools.put(tool, quantity);
                 }
                 stub.define_task(message[1], tools);
+                break;
+            case "quit":
+                stub.quit();
+                returnStr = "Goodbye =)";
                 break;
             default:
                 returnStr = "Say whaaaaat?";

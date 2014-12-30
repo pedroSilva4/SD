@@ -3,14 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.warehouse.users;
 
 import com.warehouse.shared.UsersInterface;
-import com.warehouse.util.AlreadyRegisteredException;
-import com.warehouse.util.AlreadyLoggedException;
-import com.warehouse.util.WrongPasswordException;
-import com.warehouse.util.UserNotFoundException;
+import com.warehouse.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,64 +17,72 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author Pedro
  */
-public class Users implements UsersInterface{
-    private final HashMap<String , User> users;
+public class Users implements UsersInterface {
+
+    private final HashMap<String, User> users;
     private final List<String> logged;
-    
+
     private final Lock ulock = new ReentrantLock();
     private final Lock llock = new ReentrantLock();
-   
-    public Users()
-    {
+
+    public Users() {
         this.users = new HashMap<>();
         this.logged = new ArrayList<>();
     }
-    
+
     @Override
-    public void register(String username, String password) throws AlreadyRegisteredException
-    {
+    public void register(String username, String password) throws AlreadyRegisteredException {
         ulock.lock();
-        try{
-            
-            if(this.users.containsKey(username)) throw new AlreadyRegisteredException();
-            
-            users.put(username,new User(username,password));
+        try {
+
+            if (this.users.containsKey(username)) {
+                throw new AlreadyRegisteredException();
+            }
+
+            users.put(username, new User(username, password));
+        } finally {
+            ulock.unlock();
         }
-        finally{ulock.unlock();}
-        
+
     }
-    
-    public void login(String username, String password) throws UserNotFoundException, WrongPasswordException, AlreadyLoggedException
-    {
+
+    public void login(String username, String password) throws UserNotFoundException, WrongPasswordException, AlreadyLoggedException {
         User u = null;
         ulock.lock();
-        try{
-           u = this.users.get(username);
+        try {
+            u = this.users.get(username);
+        } finally {
+            ulock.unlock();
         }
-        finally{ulock.unlock();}
-        
-        if(u==null) throw new UserNotFoundException();
-        
-        if(!password.equals(u.getPassword())) throw new WrongPasswordException();
-        
+
+        if (u == null) {
+            throw new UserNotFoundException();
+        }
+
+        if (!password.equals(u.getPassword())) {
+            throw new WrongPasswordException();
+        }
+
         llock.lock();
-        try{
-            if(logged.contains(username)) throw new AlreadyLoggedException();
+        try {
+            if (logged.contains(username)) {
+                throw new AlreadyLoggedException();
+            }
             //aviso
             this.logged.add(username);
-           
+
+        } finally {
+            llock.unlock();
         }
-        finally{llock.unlock();}
     }
-    
-    public void logout(String username)
-    {
+
+    public void logout(String username) {
         llock.lock();
-        try{
+        try {
             this.logged.remove(username);
+        } finally {
+            llock.unlock();
         }
-        finally{llock.unlock();}
     }
-    
-    
+
 }

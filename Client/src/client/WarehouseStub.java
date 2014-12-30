@@ -1,4 +1,5 @@
 package client;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -12,27 +13,41 @@ import util.*;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author bruno
  */
 class WarehouseStub implements ManagerInterface, UsersInterface {
-    
+
     final Socket socket;
     final BufferedReader in;
     final PrintWriter out;
     private String user;
-    
+
     public WarehouseStub(String host, int port) throws IOException {
         this.socket = new Socket(host, port);
         this.in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.out = new PrintWriter(socket.getOutputStream());
     }
-    
+
     @Override
     public void define_task(String name, HashMap<String, Integer> tools) {
-//        String msg = "definetask:" + name + 
+        String msg = "definetask:" + name + ":";
+
+        for (String s : tools.keySet()) {
+            msg += s;
+            msg += ":";
+            msg += tools.get(s);
+        }
+
+        out.println(msg);
+        out.flush();
+
+        try {
+            String response = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -40,28 +55,30 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         String msg = "list";
         out.println(msg);
         out.flush();
-        
+
         String response = "";
-        
+
         try {
             response = in.readLine();
-        } catch(IOException e) { e.printStackTrace(); }
-        
-        HashMap<String,TaskType> map = new HashMap<>();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        HashMap<String, TaskType> map = new HashMap<>();
         String array[] = response.split(";");
-        
+
         for (String array1 : array) {
             System.out.println(array1);
             String[] aux = array1.split(":");
             String type = aux[0];
-            HashMap<String,Integer> tools = new HashMap<>();
-            for(int i = 1; i < aux.length; i += 2) {
+            HashMap<String, Integer> tools = new HashMap<>();
+            for (int i = 1; i < aux.length; i += 2) {
                 tools.put(aux[i], Integer.parseInt(aux[i + 1]));
             }
             TaskType tt = new TaskType(type, tools);
             map.put(type, tt);
         }
-        
+
         return map;
     }
 
@@ -75,19 +92,29 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         String msg = "taskrequest:" + taskType + ":" + user;
         out.println(msg);
         out.flush();
-        
+
         try {
             String response = in.readLine();
-            if(!response.equals("-1"))
+            if (!response.equals("-1")) {
                 return Integer.parseInt(response);
-        } catch(IOException e) { e.printStackTrace(); }
-        
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         return -1;
     }
 
     @Override
     public void task_return(int task_id) throws TaskNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String msg = "taskreturn:" + task_id;
+        out.println(msg);
+        out.flush();
+
+        try {
+            String response = in.readLine();
+        } catch (IOException ex) {
+        }
     }
 
     @Override
@@ -95,15 +122,33 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         String msg = "supply:" + name + ":" + qtt;
         out.println(msg);
         out.flush();
-        
+
         try {
             String response = in.readLine();
-        } catch(IOException e) { e.printStackTrace(); }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public int waiton(int[] tasks) throws InterruptedException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String msg = "wait_for:";
+
+        for (int i = 0; i < tasks.length; i++) {
+            msg += tasks[i];
+            msg += ":";
+        }
+
+        out.println(msg);
+        out.flush();
+
+        try {
+            String response = in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 
     @Override
@@ -111,18 +156,21 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         String msg = "activity";
         out.println(msg);
         out.flush();
-            
+
         String response = "";
-        
+
         try {
             response = in.readLine();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         
+        if(response.equals(""))
+            return null;
+        
         List list = new ArrayList<>();
         String[] array = response.split(";");
-        for(String s : array) {
+        for (String s : array) {
             String[] aux = s.split(":");
             Task t = new Task(Integer.parseInt(aux[0]), aux[2], aux[1]);
             list.add(t);
@@ -135,19 +183,21 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         String msg = "login:" + username + ":" + password;
         out.println(msg);
         out.flush();
-        
+
         try {
             String response = in.readLine();
-            switch(response) {
-                case "Exception:alreadylogged": 
+            switch (response) {
+                case "Exception:alreadylogged":
                     throw new AlreadyLoggedException();
                 case "Exception:wrongpassword":
                     throw new WrongPasswordException();
                 case "Exception:usernotfound":
                     throw new UserNotFoundException();
             }
-            
-        } catch(IOException e) { e.printStackTrace(); }  
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -155,12 +205,15 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         String msg = "register:" + username + ":" + password;
         out.println(msg);
         out.flush();
-        
+
         try {
             String response = in.readLine();
-            if(response.equals("Exception:alreadyregistered"))
+            if (response.equals("Exception:alreadyregistered")) {
                 throw new AlreadyRegisteredException();
-        } catch(IOException e) {e.printStackTrace(); }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -168,15 +221,18 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         String msg = "logout:" + user;
         out.println(msg);
         out.flush();
-        
+
         try {
             String response = in.readLine();
             // do something
-        } catch(IOException e) {e.printStackTrace(); }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    
+
     public void quit() {
         try {
+            logout(user);
             socket.close();
         } catch (IOException ex) {
             ex.printStackTrace();

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.warehouse.handlers;
 
 import com.warehouse.tasks.Manager;
@@ -19,48 +18,49 @@ import java.net.Socket;
  *
  * @author Pedro
  */
-public class ClientHandler extends Thread{
+public class ClientHandler extends Thread {
+
     private final Socket sc;
     private final WareHouseSkeleton skeleton;
     private final String address;
     String username;
     public Log logger;
-    
-    public ClientHandler(Socket sc,Users us,Manager m,Log logger)
-    {
-        this.sc  = sc;
-        skeleton = new WareHouseSkeleton(this,us,m);
+
+    public ClientHandler(Socket sc, Users us, Manager m, Log logger) {
+        this.sc = sc;
+        skeleton = new WareHouseSkeleton(this, us, m);
         address = sc.getInetAddress().getHostAddress();
         this.logger = logger;
     }
-    
-    public void run()
-    {       
+
+    public void run() {
         try {
-            
+
             boolean run = true;
-            while(run){
-                
+            while (run) {
+
                 InputStreamReader ir = new InputStreamReader(sc.getInputStream());
                 BufferedReader br = new BufferedReader(ir);
                 PrintWriter pw = new PrintWriter(sc.getOutputStream());
-                
+
                 String s = br.readLine();
-                if(s==null) break;
-                
+                if (s == null) {
+                    break;
+                }
+
                 String response = skeleton.parseMassage(s);
-                
+
                 pw.println(response);
                 pw.flush();
             }
             sc.close();
-            String  r = skeleton.parseMassage("logout:"+username);
-            System.out.println("Client "+username+" on : "+address+ " disconnected,"+r);
-            
+            String r = skeleton.parseMassage("logout:" + username);
+            System.out.println("Client " + username + " on : " + address + " disconnected," + r);
+
         } catch (IOException ex) {
-            String  r = skeleton.parseMassage("logout:"+username);
-            System.out.println("Client "+username+" on : "+address+ " disconnected,"+r);
+            String r = skeleton.parseMassage("logout:" + username);
+            System.out.println("Client " + username + " on : " + address + " disconnected," + r);
         }
     }
-    
+
 }
