@@ -7,10 +7,13 @@
 package com.warehouse.LocalClient;
 
 import com.warehouse.tasks.Manager;
+import com.warehouse.tasks.TaskType;
+import com.warehouse.users.User;
 import com.warehouse.users.Users;
 import com.warehouse.util.AlreadyLoggedException;
 import com.warehouse.util.AlreadyRegisteredException;
 import com.warehouse.util.Log;
+import com.warehouse.util.Save2FileThread;
 import com.warehouse.util.UserNotFoundException;
 import com.warehouse.util.WrongPasswordException;
 import java.io.BufferedReader;
@@ -18,6 +21,7 @@ import java.io.Console;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -59,7 +63,8 @@ public class LocalClient extends Thread{
                                 password+=c;
                             }
                             this.username = user;
-                            users.login(user, password);
+                            String pwd = User.convertPassword(password);
+                            users.login(user, pwd);
                             logged = true;
                           
                         } catch (UserNotFoundException ex) {
@@ -72,12 +77,12 @@ public class LocalClient extends Thread{
                }
               else{ 
                   System.out.println("Warning : You can't do that!");
+                  break;
               }
               break;
             }
             case "register" : {
                 if(logged==false) {
-              
                         try {
                             String user = args[1];
                             System.out.print("Password :");
@@ -86,8 +91,10 @@ public class LocalClient extends Thread{
                             for(char c:pass){
                                 password+=c;
                             }
-                            users.register(user, password);
-                            logged = true;
+                            String pwd = User.convertPassword(password);
+                            users.register(user, pwd);
+                            String reg = "register:"+user+":"+pwd;
+                            new Save2FileThread(reg, logger.usrPw).start();
                           
                         } catch (AlreadyRegisteredException ex) { 
                             System.out.println("Error : Already Registered!");
@@ -97,9 +104,6 @@ public class LocalClient extends Thread{
                   System.out.println("Warning : You can't do that!");
               }
               break;
-            }
-            default :{
-                System.out.println("Warning : You can't do that!");
             }
             case "logout":{
                 if(logged == true){
@@ -121,9 +125,22 @@ public class LocalClient extends Thread{
                 break;
             }
             case "list":{
-                
+                HashMap<String, TaskType> map = man.get_taskTypes();
+                if(map == null)
+                    System.out.println("No tasks available at the moment!");
+                else {
+                    System.out.println("\\nTasks available:\\n");
+                    for(TaskType tt : map.values()) {
+                       System.out.println(tt.toString());
+                    }
+                }
+                break;
             }
             case "activity":{
+            }
+            default :{
+                System.out.println("Warning : You can't do that!");
+                break;
             }
         }
         return logged;

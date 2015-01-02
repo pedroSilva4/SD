@@ -188,7 +188,7 @@ public class WareHouseSkeleton {
                 }
                 break;
             }
-            case "waitfor":{
+            case "wait_for":{
                 boolean b = true;
                 int[] tasks_ids = new int[message.length-1];
                 for(int i=1;i<message.length;i++){

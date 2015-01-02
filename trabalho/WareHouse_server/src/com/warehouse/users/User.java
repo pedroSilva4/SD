@@ -5,6 +5,11 @@
  */
 package com.warehouse.users;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Pedro
@@ -26,5 +31,31 @@ public class User {
     public String getUsername() {
         return username;
     }
+    
+    public static String convertPassword(String s) 
+    {
+            MessageDigest digest;
+        try {
+                digest = MessageDigest.getInstance("SHA-256");
 
+                byte[] convertedPassword = digest.digest(s.getBytes());
+
+                StringBuilder hexString = new StringBuilder();
+                for (int i = 0; i < convertedPassword.length; i++) 
+                {
+                    String hex = Integer.toHexString(0xff & convertedPassword[i]);
+                    if(hex.length() == 1) 
+                        hexString.append('0');
+
+                    hexString.append(hex);
+                }
+                return hexString.toString();
+            
+        } catch (NoSuchAlgorithmException ex) {
+           
+        }
+            
+           return s;
+    }
+    
 }
