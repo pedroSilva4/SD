@@ -19,9 +19,15 @@ public class Server {
 
     /**
      * @param args the command line arguments
+     * @throws java.lang.InterruptedException
      */
     public static void main(String[] args) throws InterruptedException {
         // TODO code application logic here
+        try{
+        if(args.length<1) {System.out.println("Missing PORT!");return;}
+            
+        int PORT = Integer.parseInt(args[0]);
+       
         Users users = new Users();
         Manager manager = new Manager();
 
@@ -31,10 +37,14 @@ public class Server {
         init.start();
         init.join();
 
-        ConnectionsHandler conn = new ConnectionsHandler(50000, users, manager, logger);
+        ConnectionsHandler conn = new ConnectionsHandler(PORT, users, manager, logger);
         conn.start();
+        
         conn.join();
-
+        
+        }catch(NumberFormatException ex){
+            System.out.println("Cannot Initiate Server on port : "+args[0]);
+        }
     }
 
 }
