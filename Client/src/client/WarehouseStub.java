@@ -181,6 +181,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
     @Override
     public void login(String username, String password) throws UserNotFoundException, WrongPasswordException, AlreadyLoggedException {
         String msg = "login:" + username + ":" + password;
+        this.user = username;
         out.println(msg);
         out.flush();
 
@@ -218,7 +219,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
 
     @Override
     public void logout(String username) {
-        String msg = "logout:" + user;
+        String msg = "logout:" + username;
         out.println(msg);
         out.flush();
 
@@ -230,9 +231,17 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         }
     }
 
-    public void quit() {
+    public void quitWhileLoggedIn() {
         try {
             logout(user);
+            socket.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public void quit() {
+        try {
             socket.close();
         } catch (IOException ex) {
             ex.printStackTrace();

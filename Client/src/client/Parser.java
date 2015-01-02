@@ -1,6 +1,7 @@
 package client;
 
 
+import java.io.Console;
 import java.util.HashMap;
 import java.util.List;
 import lib.Task;
@@ -19,10 +20,15 @@ import util.*;
  */
 public class Parser {
     
-    public String parseAndCall(String msg, WarehouseStub stub, boolean loggedin) {
+    private String user;
+    
+    public Parser() {
+        this.user = "";
+    }
+
+    public String parseAndCall(String msg, WarehouseStub stub, boolean loggedin, Console stdin) {
         String returnStr = "";
         String message[] = msg.split(" ");
-        String user = "";
         
         if(message.length < 1) 
             return null;
@@ -34,21 +40,32 @@ public class Parser {
                 
             case "register":
                 try {
-                    stub.register(message[1], message[2]);
+                    String usr = message[1];
+                    System.out.println("Password:");
+                    char[] pass = stdin.readPassword();
+                    String password = "";
+                    for(char c : pass)
+                        password += c;
+                    stub.register(usr, password);
                     returnStr = "Register successful.";
                 } catch (AlreadyRegisteredException ex) {
                     returnStr = "The username " + message[1] + " already exists!"; 
                 }
                 break;
             case "login":
-                user = message[1];
+                this.user = message[1];
+                System.out.println("Password:");
+                char[] pass = stdin.readPassword();
+                String password = "";
+                for(char c : pass)
+                    password += c;
                 try {
-                    stub.login(user, message[2]);
+                    stub.login(this.user, password);
                     returnStr = "Login successful!";
                 } catch (UserNotFoundException ex) {
-                    returnStr = user + " not found!";
+                    returnStr = this.user + " not found!";
                 } catch (AlreadyLoggedException ex) {
-                    returnStr = user + " already logged in!";
+                    returnStr = this.user + " already logged in!";
                 } catch (WrongPasswordException ex) {
                     returnStr = "Wrong password!";
                 }
@@ -65,7 +82,7 @@ public class Parser {
             switch(command) {
                 
             case "logout":
-                stub.logout(user);
+                stub.logout(this.user);
                 returnStr = "Logged out!";
                 break;
             case "activity":
@@ -102,7 +119,7 @@ public class Parser {
                 break;
             case "request":
                 try {
-                    stub.task_request(message[1], user);
+                    stub.task_request(message[1], this.user);
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -110,8 +127,12 @@ public class Parser {
             case "list":
                 returnStr = "\nTasks available:\n";
                 HashMap<String, TaskType> map = stub.get_taskTypes();
-                for(TaskType tt : map.values()) {
-                    returnStr += tt.toString();
+                if(map == null)
+                    returnStr = "No tasks available at the moment!";
+                else {
+                    for(TaskType tt : map.values()) {
+                        returnStr += tt.toString();
+                    }
                 }
                 break;
             case "define":
@@ -125,7 +146,7 @@ public class Parser {
                 stub.define_task(message[1], tools);
                 break;
             case "quit":
-                stub.quit();
+                stub.quitWhileLoggedIn();
                 returnStr = "Goodbye =)";
                 break;
             default:

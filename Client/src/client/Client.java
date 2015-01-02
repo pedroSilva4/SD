@@ -6,9 +6,8 @@
 
 package client;
 
-import java.io.BufferedReader;
+import java.io.Console;
 import java.io.IOException;
-import java.io.InputStreamReader;
 
 /**
  *
@@ -21,32 +20,33 @@ public class Client {
         int port = Integer.parseInt(args[1]);
 
         Parser parser = new Parser();
-        WarehouseStub stub = null;
+        WarehouseStub stub;
         String input = "";
     
-        BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+//        BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));
+        
+        Console stdin = System.console();
 
         while(true) {
-            try {
-                input = stdin.readLine();
-                
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            System.out.print(">>");
+            input = stdin.readLine();
             
             try {
                 stub = new WarehouseStub(host, port);
-                String ret = parser.parseAndCall(input, stub, false);
-                System.out.println("Response: " + ret);
+                String ret = parser.parseAndCall(input, stub, false, stdin);
+                System.out.println("> " + ret);
                 if(ret.equals("Login successful!")) {
                     while(true) {
-                         input = stdin.readLine();
-                         ret = parser.parseAndCall(input, stub, true);
-                         System.out.println("> " + ret);
-                         if(ret.equals("Goodbye =)"))
-                             break;
+                        System.out.print(">>");
+                        input = stdin.readLine();
+                        ret = parser.parseAndCall(input, stub, true, stdin);
+                        System.out.println("> " + ret);
+                        if(ret.equals("Goodbye =)") || ret.equals("Logged out!"))
+                            break;
                     }
                 }
+                if(ret.equals("Goodbye =)"))
+                            break;
             } catch (IOException ex) {
                 ex.printStackTrace();
             }            
