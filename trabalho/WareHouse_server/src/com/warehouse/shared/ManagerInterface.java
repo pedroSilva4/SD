@@ -24,7 +24,7 @@ public interface ManagerInterface {
 
     public int task_request(String taskType, String user) throws InterruptedException;
 
-    public void task_return(int task_id) throws TaskNotFoundException;
+    public void task_return(int task_id,String usr) throws TaskNotFoundException,WrongUserException;
 
     public void add_tool(String name, int qtt, boolean ret);
 

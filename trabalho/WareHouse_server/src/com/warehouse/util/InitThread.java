@@ -9,6 +9,8 @@ import com.warehouse.tasks.Manager;
 import com.warehouse.users.Users;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -104,9 +106,12 @@ public class InitThread extends Thread {
                 }
                 int task_id = Integer.parseInt(message[1]);
                 try {
-                    man.task_return(task_id);
+                    man.task_return(task_id,"logger");
                     break;
                 } catch (TaskNotFoundException ex) {
+                    break;
+                } catch (WrongUserException ex) {
+                    System.out.println("nao consegui");
                     break;
                 }
             }

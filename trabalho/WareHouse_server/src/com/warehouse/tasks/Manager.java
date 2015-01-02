@@ -5,6 +5,7 @@
  */
 package com.warehouse.tasks;
 
+import com.warehouse.util.WrongUserException;
 import com.warehouse.util.*;
 import com.warehouse.shared.ManagerInterface;
 import com.warehouse.tools.WareHouse;
@@ -145,7 +146,7 @@ public class Manager implements ManagerInterface {
     }
 
     @Override
-    public void task_return(int task_id) throws TaskNotFoundException {
+        public void task_return(int task_id,String username) throws TaskNotFoundException,WrongUserException {
         Task t;
         HashMap<String, Integer> tools = null;
 
@@ -165,6 +166,8 @@ public class Manager implements ManagerInterface {
         lockTsk();
         try {
             Task ta = activeTasks.get(task_id);
+            if(!ta.getUsername().equals(username) && !username.equals("logger")) throw new WrongUserException();
+                
             activeTasks.remove(task_id);
             ta.signalAll();
         } finally {
