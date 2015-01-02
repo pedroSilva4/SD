@@ -54,12 +54,12 @@ public class ClientHandler extends Thread {
                 pw.flush();
             }
             sc.close();
-            String r = skeleton.parseMassage("logout:" + username);
-            System.out.println("Client " + username + " on : " + address + " disconnected," + r);
+             String r = skeleton.parseMassage("logout:" + username);
+             //System.err.println("Client " + username + " on : " + address + " disconnected," + r);
 
         } catch (IOException ex) {
             String r = skeleton.parseMassage("logout:" + username);
-            System.out.println("Client " + username + " on : " + address + " disconnected," + r);
+            //System.err.println("Client " + username + " on : " + address + " disconnected," + r);
         }
     }
 

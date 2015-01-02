@@ -84,5 +84,14 @@ public class Users implements UsersInterface {
             llock.unlock();
         }
     }
+    
+    public ArrayList<String> getLogged(){
+         llock.lock();
+        try {
+                return new ArrayList<>(this.logged);
+        } finally {
+            llock.unlock();
+        }
+    }
 
 }

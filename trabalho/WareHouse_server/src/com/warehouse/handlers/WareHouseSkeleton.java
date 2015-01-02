@@ -31,7 +31,6 @@ public class WareHouseSkeleton {
     }
 
     public String parseMassage(String m) {
-        System.out.println(m);
         String message[] = m.split(":");
         String response = null;
         if (message.length < 1) {
