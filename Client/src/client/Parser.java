@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import lib.Task;
 import lib.TaskType;
+import lib.User;
 import util.*;
 
 /*
@@ -46,7 +47,7 @@ public class Parser {
                     String password = "";
                     for(char c : pass)
                         password += c;
-                    stub.register(usr, password);
+                    stub.register(usr, User.convertPassword(password));
                     returnStr = "Register successful.";
                 } catch (AlreadyRegisteredException ex) {
                     returnStr = "The username " + message[1] + " already exists!"; 
@@ -60,7 +61,7 @@ public class Parser {
                 for(char c : pass)
                     password += c;
                 try {
-                    stub.login(this.user, password);
+                    stub.login(this.user, User.convertPassword(password));
                     returnStr = "Login successful!";
                 } catch (UserNotFoundException ex) {
                     returnStr = this.user + " not found!";
@@ -108,7 +109,8 @@ public class Parser {
                 }
                 break;
             case "supply":
-                stub.add_tool(message[1], Integer.parseInt(message[2]), true);
+                String tool = message[1].replace("_", " ");
+                stub.add_tool(tool, Integer.parseInt(message[2]), true);
                 break;
             case "completed":
                 try {
@@ -119,7 +121,9 @@ public class Parser {
                 break;
             case "request":
                 try {
-                    stub.task_request(message[1], this.user);
+                    returnStr = "Task ID: " + Integer.toString(stub.task_request(message[1], this.user));
+                    if(returnStr.equals("-1"))
+                        returnStr = "Task not available!";
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
                 }
@@ -139,9 +143,9 @@ public class Parser {
                 HashMap<String, Integer> tools = new HashMap<>();
                 for(int i = 2; i < message.length; i++) {
                     String aux[] = message[i].split(":");
-                    String tool = aux[0];
+                    String toolAux = aux[0].replace("_", " ");
                     int quantity = Integer.parseInt(aux[1]);
-                    tools.put(tool, quantity);
+                    tools.put(toolAux, quantity);
                 }
                 stub.define_task(message[1], tools);
                 break;

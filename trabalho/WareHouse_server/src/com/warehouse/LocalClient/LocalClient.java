@@ -16,16 +16,12 @@ import com.warehouse.util.Log;
 import com.warehouse.util.Save2FileThread;
 import com.warehouse.util.UserNotFoundException;
 import com.warehouse.util.WrongPasswordException;
-import java.io.BufferedReader;
 import java.io.Console;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import sun.security.util.Password;
 
 /**
  *

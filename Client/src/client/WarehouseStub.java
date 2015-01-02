@@ -38,6 +38,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
             msg += s;
             msg += ":";
             msg += tools.get(s);
+            msg += ":";
         }
 
         out.println(msg);
@@ -68,7 +69,6 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         String array[] = response.split(";");
 
         for (String array1 : array) {
-            System.out.println(array1);
             String[] aux = array1.split(":");
             String type = aux[0];
             HashMap<String, Integer> tools = new HashMap<>();
