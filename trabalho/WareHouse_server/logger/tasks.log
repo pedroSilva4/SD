@@ -1,0 +1,8 @@
+definetask:Cadeira:Martelo:1:Chave de Fendas:1
+definetask:Arrumos:Empilhador:1
+definetask:Contabilidade:Portátil:1
+definetask:Entrega:Carrinha:1
+definetask:Candeeiro:Chave de Fendas:1:Chave em Cruz:1
+taskrequest:Entrega:pedro
+taskrequest:Cadeira:bruno
+taskreturn:1
