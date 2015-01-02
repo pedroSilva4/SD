@@ -7,6 +7,7 @@
 package com.warehouse.LocalClient;
 
 import com.warehouse.tasks.Manager;
+import com.warehouse.tasks.Task;
 import com.warehouse.tasks.TaskType;
 import com.warehouse.users.User;
 import com.warehouse.users.Users;
@@ -14,8 +15,10 @@ import com.warehouse.util.AlreadyLoggedException;
 import com.warehouse.util.AlreadyRegisteredException;
 import com.warehouse.util.Log;
 import com.warehouse.util.Save2FileThread;
+import com.warehouse.util.TaskNotFoundException;
 import com.warehouse.util.UserNotFoundException;
 import com.warehouse.util.WrongPasswordException;
+import com.warehouse.util.WrongUserException;
 import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -133,6 +136,50 @@ public class LocalClient extends Thread{
                 break;
             }
             case "activity":{
+                ArrayList<Task> tasks = new ArrayList<>(man.getActiveTasks());
+                System.out.println("\nActivity :\n");
+                for(Task t : tasks)
+                    System.out.println(t.toString());
+            }
+            case "supply":{
+                String tool = args[1].replace("_", " ");
+                man.add_tool(tool, Integer.parseInt(args[2]), true);
+                String at = "supply:"+tool+":"+args[2];
+                new Save2FileThread(s, logger.toolsPw).start();
+            }
+            case "wait_for":{
+                int[] tasks = new int[args.length - 1];
+                for(int i = 1; i < args.length; i++)
+                    tasks[i] = Integer.parseInt(args[i]);
+                try {
+                    man.waiton(tasks);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                break;
+            }
+            case "completed":{
+                try {
+                   man.task_return(Integer.parseInt(args[1]),this.username);
+                } catch (TaskNotFoundException ex) {
+                     System.out.println("Task not found!");
+                } catch (WrongUserException ex) {
+                    System.out.println("You are not the Owner of this Task!");
+                }
+                break;
+            }
+            case "request":{
+                try {
+                    String res  = Integer.toString(man.task_request(args[1], this.username));
+                    if(res.equals("-1"))
+                        System.out.println("Task not available!");
+                    else{
+                   System.out.println("Task ID: " + res);
+                    }
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+                break;
             }
             default :{
                 System.out.println("Warning : You can't do that!");
