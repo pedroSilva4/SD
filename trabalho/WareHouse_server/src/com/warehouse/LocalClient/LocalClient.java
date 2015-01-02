@@ -120,9 +120,15 @@ public class LocalClient extends Thread{
                 }
                 break;
             }
+            case "list":{
+                
+            }
+            case "activity":{
+            }
         }
         return logged;
     }
+    @Override
     public void run(){
         try {
             sleep(100);
