@@ -28,4 +28,17 @@ public class TaskType {
     public String getType() {
         return this.type;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\t");
+        sb.append(type);
+        sb.append("\n");
+        for (String tool : tools.keySet()) {
+            sb.append("\t\t").append(tool).append(" ").append(tools.get(tool).toString()).append("\n");
+        }
+
+        return sb.toString();
+    }
 }

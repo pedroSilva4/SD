@@ -6,5 +6,31 @@ definetask:Candeeiro:Chave de Fendas:1:Chave em Cruz:1
 taskrequest:Entrega:pedro
 taskrequest:Cadeira:bruno
 taskreturn:1
-
 taskreturn:2
+taskrequest:Candeeiro:bruno
+taskreturn:3
+taskrequest:Entrega:bruno
+taskrequest:Candeeiro:bruno
+taskrequest:Cadeira:bruno
+taskreturn:5
+taskreturn:4
+taskreturn:6
+taskrequest:Contabilidade:bruno
+taskreturn:7
+taskrequest:Cadeira:bruno
+taskreturn:8
+definetask:Mesa:Martelo:1:Prego:16:
+definetask:Cama:Parafuso:30:Chave de Fendas:1:
+taskrequest:Cama:bruno
+definetask:Sopa:Colher de Pau:1:
+taskrequest:Sopa:bruno
+taskrequest:Cadeira:banana
+taskreturn:9
+taskreturn:11
+taskrequest:Cama:banana
+taskrequest:Sopa:banana
+taskreturn:12
+taskrequest:Cama:bruno
+taskreturn:13
+taskreturn:14
+taskreturn:10

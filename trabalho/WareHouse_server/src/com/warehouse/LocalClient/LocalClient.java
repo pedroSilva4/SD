@@ -45,7 +45,7 @@ public class LocalClient extends Thread{
     }
     
     private boolean inputHandler(boolean logged,String s,Console con){
-        if(s.matches("\\s\\t")) return logged;
+        if(s.matches("\\s+") || s.equals("") ) return logged;
         
         String[] args = s.split(" "); 
         
@@ -129,7 +129,7 @@ public class LocalClient extends Thread{
                 if(map == null)
                     System.out.println("No tasks available at the moment!");
                 else {
-                    System.out.println("\\nTasks available:\\n");
+                    System.out.println("\nTasks available:\n");
                     for(TaskType tt : map.values()) {
                        System.out.println(tt.toString());
                     }

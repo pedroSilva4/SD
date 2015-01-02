@@ -98,6 +98,7 @@ public class WareHouseSkeleton {
             case "definetask": {
 //              definetask:nometarefa:tool1:qtd:tool2:qtd
 //              tem de ter pelo menos 4 argumentos 
+                System.out.println(m);
                 response = null;
                 HashMap<String, Integer> tools = new HashMap<>();
                 if (message.length <= 3) {
@@ -140,7 +141,9 @@ public class WareHouseSkeleton {
                     int task_request = manager.task_request(taskType, username);
                     response = "" + task_request;
                     //escrever no cenas
-                    new Save2FileThread(m,caller.logger.taskPw).start();
+                    if(!response.equals("-1"))
+                        new Save2FileThread(m,caller.logger.taskPw).start();
+                    
                     break;
 
                 } catch (InterruptedException ex) {
@@ -154,7 +157,7 @@ public class WareHouseSkeleton {
                 }
                 int task_id = Integer.parseInt(message[1]);
                 try {
-                    manager.task_return(task_id);
+                    manager.task_return(task_id,caller.username);
                     response = "taskreturn:ok";
                     //escrever no cenas
                     new Save2FileThread(m,caller.logger.taskPw).start();
@@ -163,7 +166,10 @@ public class WareHouseSkeleton {
                     response = "Exception:tasknotfound";
                     break;
 
-                }
+                } catch (WrongUserException ex) {
+                    response = "Exception:WrongUser";
+                    break;
+            }
             }
             case "list": {
                 Collection<TaskType> types = manager.get_taskTypes().values();
@@ -176,7 +182,6 @@ public class WareHouseSkeleton {
                     response += ";";
 
                 }
-                System.out.println(response);
                 break;
 
             }
