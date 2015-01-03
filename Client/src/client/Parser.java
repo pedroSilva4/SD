@@ -2,6 +2,7 @@ package client;
 
 
 import java.io.Console;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import lib.Task;
@@ -29,10 +30,14 @@ public class Parser {
 
     public String parseAndCall(String msg, WarehouseStub stub, boolean loggedin, Console stdin) {
         String returnStr = "";
+        
+        if(msg.matches("\\s+") || msg.equals(""))
+            return "";
+        
         String message[] = msg.split(" ");
         
         if(message.length < 1) 
-            return null;
+            return "";
         
         String command = message[0];
         
@@ -51,7 +56,9 @@ public class Parser {
                     returnStr = "Register successful.";
                 } catch (AlreadyRegisteredException ex) {
                     returnStr = "The username " + message[1] + " already exists!"; 
-                }
+                } catch (IOException ex) {
+                    returnStr = "Connection lost!";
+            }
                 break;
             case "login":
                 this.user = message[1];
@@ -69,10 +76,15 @@ public class Parser {
                     returnStr = this.user + " already logged in!";
                 } catch (WrongPasswordException ex) {
                     returnStr = "Wrong password!";
+                } catch (IOException ex) {
+                    returnStr = "Connection lost!";
                 }
                 break;
             case "quit":
-                stub.quit();
+                try {
+                    stub.quit();
+                } catch (IOException ex) {
+                }
                 returnStr = "Goodbye =)";
                 break;
             default:
@@ -83,40 +95,59 @@ public class Parser {
             switch(command) {
                 
             case "logout":
-                stub.logout(this.user);
+                try {
+                    stub.logout(this.user);
+                } catch (IOException ex) {
+                }
                 returnStr = "Logged out!";
                 break;
             case "activity":
-                List l = stub.getActiveTasks();
-                if(l == null)
-                    returnStr = "No activity at the moment!";
-                else {
-                    returnStr = "\nActivity:\n";
-                    for (Object l1 : l) {
-                        Task t = (Task) l1;
-                        returnStr += t.toString();
+                List l;
+                try {
+                    l = stub.getActiveTasks();
+                    if(l == null)
+                        returnStr = "No activity at the moment!";
+                    else {
+                        returnStr = "\nActivity:\n";
+                        for (Object l1 : l) {
+                            Task t = (Task) l1;
+                            returnStr += t.toString();
+                        }
                     }
+                } catch (IOException ex) {
+                    returnStr = "Connection lost!";
                 }
                 break;
             case "wait_for":
                 int[] tasks = new int[message.length - 1];
                 for(int i = 1; i < message.length; i++)
-                    tasks[i] = Integer.parseInt(message[i]);
+                    tasks[i - 1] = Integer.parseInt(message[i]);
                 try {
-                    stub.waiton(tasks);
+                    if(stub.waiton(tasks) == 1)
+                        returnStr = "All tasks completed!";
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
+                } catch (IOException ex) {
+                    returnStr = "Connection lost!";
                 }
                 break;
             case "supply":
                 String tool = message[1].replace("_", " ");
-                stub.add_tool(tool, Integer.parseInt(message[2]), true);
+                try {
+                    stub.add_tool(tool, Integer.parseInt(message[2]), true);
+                } catch (IOException ex) {
+                    returnStr = "Connection lost!";
+                }
                 break;
             case "completed":
                 try {
                     stub.task_return(Integer.parseInt(message[1]));
                 } catch (TaskNotFoundException ex) {
                     returnStr = "Task not found!";
+                } catch (IOException ex) {
+                    returnStr = "Connection lost!";
+                } catch (WrongUserException ex) {
+                    returnStr = "Task belongs to other user!";
                 }
                 break;
             case "request":
@@ -126,17 +157,24 @@ public class Parser {
                         returnStr = "Task not available!";
                 } catch (InterruptedException ex) {
                     ex.printStackTrace();
+                } catch (IOException ex) {
+                    returnStr = "Connection lost!";
                 }
                 break;
             case "list":
                 returnStr = "\nTasks available:\n";
-                HashMap<String, TaskType> map = stub.get_taskTypes();
+                HashMap<String, TaskType> map;
+                try {
+                    map = stub.get_taskTypes();
                 if(map == null)
                     returnStr = "No tasks available at the moment!";
                 else {
                     for(TaskType tt : map.values()) {
                         returnStr += tt.toString();
                     }
+                }                    
+                } catch (IOException ex) {
+                    returnStr = "Connection lost!";
                 }
                 break;
             case "define":
@@ -147,14 +185,25 @@ public class Parser {
                     int quantity = Integer.parseInt(aux[1]);
                     tools.put(toolAux, quantity);
                 }
-                stub.define_task(message[1], tools);
+                try {
+                    stub.define_task(message[1], tools);
+                } catch (TaskAlreadyDefinedException ex) {
+                    returnStr = "Task " + message[1] + " already defined!";
+                } catch (IOException ex) {
+                    returnStr = "Connection lost!";
+                }
                 break;
             case "quit":
-                stub.quitWhileLoggedIn();
+                try {
+                    stub.quitWhileLoggedIn();
+                } catch (IOException ex) {
+                }
                 returnStr = "Goodbye =)";
                 break;
+            case "help":
+                break;
             default:
-                returnStr = "Say whaaaaat?";
+                returnStr = command + " not available. Type help to list all available commands!";
                 break;
             }
         }     
