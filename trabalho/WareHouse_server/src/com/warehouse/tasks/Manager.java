@@ -8,6 +8,7 @@ package com.warehouse.tasks;
 import com.warehouse.util.WrongUserException;
 import com.warehouse.util.*;
 import com.warehouse.shared.ManagerInterface;
+import com.warehouse.tools.Tool;
 import com.warehouse.tools.WareHouse;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -209,5 +210,11 @@ public class Manager implements ManagerInterface {
             unlockTsk();
         }
         return l;
+    }
+    
+    public List<Tool> getTools(){
+        
+        List<Tool> tools  = new ArrayList<>(wh.get_inventory().values());
+        return tools;
     }
 }

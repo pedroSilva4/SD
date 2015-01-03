@@ -58,11 +58,11 @@ public class Task {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append(task_id);
+        sb.append("Task ID :").append(task_id);
         sb.append("\t");
-        sb.append(type);
+        sb.append("Type :").append(type.getType());
         sb.append("\t");
-        sb.append(user);
+        sb.append("User :").append(this.user);
         sb.append("\n");
 
         return sb.toString();

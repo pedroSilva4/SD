@@ -9,6 +9,7 @@ package com.warehouse.LocalClient;
 import com.warehouse.tasks.Manager;
 import com.warehouse.tasks.Task;
 import com.warehouse.tasks.TaskType;
+import com.warehouse.tools.Tool;
 import com.warehouse.users.User;
 import com.warehouse.users.Users;
 import com.warehouse.util.AlreadyLoggedException;
@@ -22,6 +23,7 @@ import com.warehouse.util.WrongUserException;
 import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,7 +67,7 @@ public class LocalClient extends Thread{
                             String pwd = User.convertPassword(password);
                             users.login(user, pwd);
                             logged = true;
-                          
+                            System.out.println("You are now Logged In");
                         } catch (UserNotFoundException ex) {
                             System.out.println("ERROR : User not found!");
                         } catch (WrongPasswordException ex) {
@@ -95,6 +97,7 @@ public class LocalClient extends Thread{
                             users.register(user, pwd);
                             String reg = "register:"+user+":"+pwd;
                             new Save2FileThread(reg, logger.usrPw).start();
+                            System.out.println("Register Successful!");
                           
                         } catch (AlreadyRegisteredException ex) { 
                             System.out.println("Error : Already Registered!");
@@ -109,7 +112,7 @@ public class LocalClient extends Thread{
                 if(logged == true){
                      users.logout(this.username);
                      logged = false;
-                     
+                     System.out.println("Logout Successful!");
                 } else{ 
                   System.out.println("Warning : You can't do that!");
                   
@@ -138,9 +141,10 @@ public class LocalClient extends Thread{
             }
             case "activity":{
                 ArrayList<Task> tasks = new ArrayList<>(man.getActiveTasks());
-                System.out.println("\nActivity :\n");
+                System.out.println("Activity :\n");
                 for(Task t : tasks)
                     System.out.println(t.toString());
+                break;
             }
             case "supply":{
                 if(logged == true){
@@ -180,6 +184,8 @@ public class LocalClient extends Thread{
                     if(args.length < 2 || !isNumber(args[1])) {System.out.println("Error : Wrong Arguments!");break;}
                     try {
                        man.task_return(Integer.parseInt(args[1]),this.username);
+                       String save2file = "taskreturn:"+args[1];
+                       new Save2FileThread(save2file, logger.taskPw).start();
                     } catch (TaskNotFoundException ex) {
                          System.out.println("Task not found!");
                     } catch (WrongUserException ex) {
@@ -199,6 +205,8 @@ public class LocalClient extends Thread{
                             System.out.println("Task not available!");
                         else{
                        System.out.println("Task ID: " + res);
+                       String save2file = "taskrequest:"+args[1]+":"+this.username;
+                       new Save2FileThread(save2file,logger.taskPw).start();
                         }
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
@@ -206,6 +214,13 @@ public class LocalClient extends Thread{
                 }else{
                      System.out.println("Warning : You can't do that!");
                 }
+                break;
+            }
+            case "material":{
+                System.out.println("Available Tools : \n");
+                List<Tool> tools = man.getTools();
+                for(Tool t : tools)
+                    System.out.println(t.toString());
                 break;
             }
             default :{
@@ -220,7 +235,7 @@ public class LocalClient extends Thread{
         try {
             sleep(100);
         } catch (InterruptedException ex) {
-            Logger.getLogger(LocalClient.class.getName()).log(Level.SEVERE, null, ex);
+           
         }
         boolean run = true;
        Console con = System.console();
@@ -233,7 +248,7 @@ public class LocalClient extends Thread{
             logged = inputHandler(logged,input,con);
             
             while(logged){
-                System.out.print(">> ");
+                System.out.print(this.username + " :=>");
                 input = con.readLine();
                 logged = inputHandler(logged,input,con);
             }

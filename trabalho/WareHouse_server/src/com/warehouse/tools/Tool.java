@@ -77,4 +77,12 @@ public class Tool {
     public synchronized boolean is_returnable() {
         return this.returnable;
     }
+    
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append("Tool : ").append(tool_name);
+        sb.append("\tstock : ").append(this.quantity);
+        return sb.toString();
+    }
 }
