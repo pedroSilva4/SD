@@ -52,7 +52,7 @@ public class LocalClient extends Thread{
         switch(args[0]){
             case "login":{
               if(logged==false) {
-              
+                        if(args.length < 2) {System.out.println("Error : Wrong Arguments!");break;}
                         try {
                             String user = args[1];
                             System.out.print("Password :");
@@ -82,6 +82,7 @@ public class LocalClient extends Thread{
             }
             case "register" : {
                 if(logged==false) {
+                        if(args.length < 2) {System.out.println("Error : Wrong Arguments!");break;}
                         try {
                             String user = args[1];
                             System.out.print("Password :");
@@ -143,6 +144,7 @@ public class LocalClient extends Thread{
             }
             case "supply":{
                 if(logged == true){
+                    if(args.length < 3 || !isNumber(args[2])) {System.out.println("Error : Wrong Arguments!");break;}
                     String tool = args[1].replace("_", " ");
                     man.add_tool(tool, Integer.parseInt(args[2]), true);
                     String at = "supply:"+tool+":"+args[2];
@@ -154,9 +156,15 @@ public class LocalClient extends Thread{
             }
             case "wait_for":{
                 if(logged==true){
+                    if(args.length < 2) {System.out.println("Error : Wrong Arguments!");break;}
                     int[] tasks = new int[args.length - 1];
-                    for(int i = 1; i < args.length; i++)
+                    boolean alln  = true;
+                    for(int i = 1; i < args.length; i++){
+                        if(!isNumber(args[i])){alln = false;break;}
+                        
                         tasks[i] = Integer.parseInt(args[i]);
+                    }
+                    if(!alln){System.out.println("Error : Wrong Arguments!");break;}
                     try {
                         man.waiton(tasks);
                     } catch (InterruptedException ex) {
@@ -169,6 +177,7 @@ public class LocalClient extends Thread{
             }
             case "completed":{
                 if(logged == true){
+                    if(args.length < 2 || !isNumber(args[1])) {System.out.println("Error : Wrong Arguments!");break;}
                     try {
                        man.task_return(Integer.parseInt(args[1]),this.username);
                     } catch (TaskNotFoundException ex) {
@@ -183,6 +192,7 @@ public class LocalClient extends Thread{
             }
             case "request":{
                 if(logged==true){
+                    if(args.length < 2) {System.out.println("Error : Wrong Arguments!");break;}
                     try {
                         String res  = Integer.toString(man.task_request(args[1], this.username));
                         if(res.equals("-1"))
@@ -229,6 +239,17 @@ public class LocalClient extends Thread{
             }
         }
                 
+    }
+    
+    public boolean isNumber(String s) {
+
+        try {
+            int i = Integer.parseInt(s);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
     }
     
 }
