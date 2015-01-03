@@ -38,13 +38,19 @@ public class Server {
         init.start();
         init.join();
 
+        
         ConnectionsHandler conn = new ConnectionsHandler(PORT, users, manager, logger);
         conn.start();
+        
         LocalClient lclient = new LocalClient(users, manager, logger);
-        lclient.start();
+        lclient.start(); 
+        lclient.join();
         
         conn.join();
-        lclient.join();
+         
+        
+       
+       
         
       }catch(NumberFormatException ex){
             System.out.println("Cannot Initiate Server on port : "+args[0]);
