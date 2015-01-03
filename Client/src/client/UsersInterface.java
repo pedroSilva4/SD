@@ -5,6 +5,7 @@
  */
 package client;
 
+import java.io.IOException;
 import util.*;
 
 /**
@@ -13,9 +14,9 @@ import util.*;
  */
 public interface UsersInterface {
 
-    public void login(String username, String password) throws UserNotFoundException, WrongPasswordException, AlreadyLoggedException;
+    public void login(String username, String password) throws UserNotFoundException, WrongPasswordException, AlreadyLoggedException, IOException;
 
-    public void register(String username, String password) throws AlreadyRegisteredException;
+    public void register(String username, String password) throws AlreadyRegisteredException, IOException;
 
-    public void logout(String username);
+    public void logout(String username) throws IOException;
 }
