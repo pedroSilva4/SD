@@ -16,6 +16,7 @@ import com.warehouse.util.AlreadyLoggedException;
 import com.warehouse.util.AlreadyRegisteredException;
 import com.warehouse.util.Log;
 import com.warehouse.util.Save2FileThread;
+import com.warehouse.util.TaskAlreadyDefinedException;
 import com.warehouse.util.TaskNotFoundException;
 import com.warehouse.util.UserNotFoundException;
 import com.warehouse.util.WrongPasswordException;
@@ -24,6 +25,7 @@ import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 /**
  *
  * @author Pedro
@@ -162,11 +164,13 @@ public class LocalClient extends Thread{
                     for(int i = 1; i < args.length; i++){
                         if(!isNumber(args[i])){alln = false;break;}
                         
-                        tasks[i] = Integer.parseInt(args[i]);
+                        tasks[i-1] = Integer.parseInt(args[i]);
                     }
                     if(!alln){System.out.println("Error : Wrong Arguments!");break;}
                     try {
-                        man.waiton(tasks);
+                        int waiton = man.waiton(tasks);
+                        System.out.println("All tasks done!");
+                        break;
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
@@ -196,13 +200,15 @@ public class LocalClient extends Thread{
                 if(logged==true){
                     if(args.length < 2) {System.out.println("Error : Wrong Arguments!");break;}
                     try {
-                        String res  = Integer.toString(man.task_request(args[1], this.username));
+                        String name = args[1].replace("_"," ");
+                        String res  = Integer.toString(man.task_request(name, this.username));
                         if(res.equals("-1"))
                             System.out.println("Task not available!");
                         else{
                        System.out.println("Task ID: " + res);
-                       String save2file = "taskrequest:"+args[1]+":"+this.username;
+                       String save2file = "taskrequest:"+name+":"+this.username;
                        new Save2FileThread(save2file,logger.taskPw).start();
+                       break;
                         }
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
@@ -219,8 +225,39 @@ public class LocalClient extends Thread{
                     System.out.println(t.toString());
                 break;
             }
+            case "define":{
+                if(logged){
+                        if(args.length < 3){System.out.println("Error : Wrong Arguments!");break;}
+                        HashMap<String, Integer> tools = new HashMap<>();
+                        boolean b = true;
+                        String savetools = "";
+                        for(int i = 2; i < args.length; i++) {
+                            String aux[] = args[i].split(":");
+                            String toolAux = aux[0].replace("_", " ");
+                            if(!isNumber(aux[1])){b=false;break;}
+                            int quantity = Integer.parseInt(aux[1]);
+                            tools.put(toolAux, quantity);
+                            savetools += toolAux+":"+quantity+":";
+                        }
+                        if(!b){System.out.println("Error : Wrong Arguments!");break;} 
+
+                        String name = args[1].replace("_"," ");
+                        try {
+                               man.define_task(name, tools);
+                               String save2file = "definetask:"+"name"+":"+savetools;
+                               new Save2FileThread(save2file, logger.taskPw).start();
+                               break;
+                        } catch (TaskAlreadyDefinedException ex) {
+                             System.out.println("Warning : Task Already Defined!");
+                             break;
+                        }
+                }else{
+                     System.out.println("Warning : You can't do that!");
+                     break;
+                }
+            }
             default :{
-                System.out.println("Warning : You can't do that!");
+                System.out.println("Warning : \""+s+"\" is not a valid command for this program!");
                 break;
             }
         }
@@ -245,7 +282,7 @@ public class LocalClient extends Thread{
             logged = inputHandler(logged,input,con);
             
             while(logged){
-                System.out.print("@"+this.username + "@:");
+                System.out.print(this.username + "@server:");
                 input = con.readLine();
                 if(input==null)break;
                 logged = inputHandler(logged,input,con);
