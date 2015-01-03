@@ -24,10 +24,6 @@ import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author Pedro
@@ -245,13 +241,16 @@ public class LocalClient extends Thread{
             
             System.out.print(">> ");
             input = con.readLine();
+            if(input==null) break;
             logged = inputHandler(logged,input,con);
             
             while(logged){
-                System.out.print(this.username + " :=>");
+                System.out.print("@"+this.username + "@:");
                 input = con.readLine();
+                if(input==null)break;
                 logged = inputHandler(logged,input,con);
             }
+            if(input==null)break;
         }
                 
     }
