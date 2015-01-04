@@ -172,7 +172,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         if(response.equals(""))
             return null;
         
-        List list = new ArrayList<>();
+        List<Task> list = new ArrayList<>();
         String[] array = response.split(";");
         for (String s : array) {
             String[] aux = s.split(":");
