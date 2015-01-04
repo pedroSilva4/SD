@@ -1,8 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package com.warehouse.util;
 
 import java.io.BufferedReader;
@@ -17,9 +17,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Pedro
- */
+*
+* @author Pedro
+*/
 public class Log {
 
     private File users;
@@ -46,9 +46,9 @@ public class Log {
         }
         theDir = null;
         boolean b;
-        users = new File("logger\\users.log");
-        tools = new File("logger\\tools.log");
-        tasks = new File("logger\\tasks.log");
+        users = new File("logger"+File.separator+"users.log");
+        tools = new File("logger"+File.separator+"tools.log");
+        tasks = new File("logger"+File.separator+"tasks.log");
         try {
             if (!users.exists()) {
                 b = users.createNewFile();
