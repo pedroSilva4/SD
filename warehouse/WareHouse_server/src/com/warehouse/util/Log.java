@@ -46,9 +46,9 @@ public class Log {
         }
         theDir = null;
         boolean b;
-        users = new File("logger\\users.log");
-        tools = new File("logger\\tools.log");
-        tasks = new File("logger\\tasks.log");
+        users = new File("logger"+File.pathSeparator+"users.log");
+        tools = new File("logger"+File.pathSeparator+"tools.log");
+        tasks = new File("logger"+File.pathSeparator+"tasks.log");
         try {
             if (!users.exists()) {
                 b = users.createNewFile();
