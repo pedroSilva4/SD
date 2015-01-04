@@ -9,14 +9,14 @@ import lib.*;
 import util.*;
 
 /*
-* To change this license header, choose License Headers in Project Properties.
-* To change this template file, choose Tools | Templates
-* and open the template in the editor.
-*/
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 /**
-*
-* @author bruno
-*/
+ *
+ * @author bruno
+ */
 class WarehouseStub implements ManagerInterface, UsersInterface {
 
     final Socket socket;
@@ -47,7 +47,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         try {
             String response = in.readLine();
             if(response.equals("Exception:taskalreadydefined"))
-            throw new TaskAlreadyDefinedException();
+                throw new TaskAlreadyDefinedException();
         } catch (IOException e) {
             throw new IOException();
         }
@@ -111,9 +111,9 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         try {
             String response = in.readLine();
             if(response.equals("Exception:tasknotfound"))
-            throw new TaskNotFoundException();
+                throw new TaskNotFoundException();
             if(response.equals("Exception:WrongUser"))
-            throw new WrongUserException();
+                throw new WrongUserException();
         } catch (IOException ex) {
             throw new IOException();
         }
@@ -147,7 +147,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         try {
             String response = in.readLine();
             if(response.equals("waitfor:alltasksterminated"))
-            return 1;
+                return 1;
         } catch (IOException e) {
             throw new IOException();
         }
@@ -168,10 +168,10 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
         } catch (IOException ex) {
             throw new IOException();
         }
-
+        
         if(response.equals(""))
-        return null;
-
+            return null;
+        
         List<Task> list = new ArrayList<>();
         String[] array = response.split(";");
         for (String s : array) {
@@ -193,11 +193,11 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
             String response = in.readLine();
             switch (response) {
                 case "Exception:alreadylogged":
-                throw new AlreadyLoggedException();
+                    throw new AlreadyLoggedException();
                 case "Exception:wrongpassword":
-                throw new WrongPasswordException();
+                    throw new WrongPasswordException();
                 case "Exception:usernotfound":
-                throw new UserNotFoundException();
+                    throw new UserNotFoundException();
             }
 
         } catch (IOException e) {
@@ -243,7 +243,7 @@ class WarehouseStub implements ManagerInterface, UsersInterface {
             throw new IOException();
         }
     }
-
+    
     public void quit() throws IOException{
         try {
             socket.close();
