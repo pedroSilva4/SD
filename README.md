@@ -1,13 +1,13 @@
-Sistemas Distribuídos
 Distributed Systems
 ========================
-Aulas práticas e Projeto final
-Pratical Classes and final Project
+Sistemas Distribuídos
 
+Pratical Classes and final Project
 =========================
+Aulas práticas e Projeto final
 
 Project :
-
+=========================
 Server/Client application written in JAVA using concurrency and sockets tcp
 
 to install and run client just run make on client folder
@@ -18,4 +18,4 @@ to change this value just edit the corresponding makefile
 
 Grade : 19/20
 
-==========================
+Authors : Bruno Vilaça and Pedro Silva
