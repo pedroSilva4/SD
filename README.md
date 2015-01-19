@@ -11,6 +11,7 @@ Project :
 Server/Client application written in JAVA using concurrency and sockets tcp
 
 to install and run client just run make on client folder
+
 to install and run server just run make on server folder
 
 default port : 50000
