@@ -25,3 +25,5 @@
 /Client/build/
 /Client/dist/
 *.class
+/Bank_Client/nbproject/private/
+/Bank_Server/nbproject/private/

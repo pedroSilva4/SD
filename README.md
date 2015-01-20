@@ -2,20 +2,22 @@ Distributed Systems
 ========================
 Sistemas Distribuídos
 
-Pratical Classes and final Project
+Lab Classes and final Project
 =========================
-Aulas práticas e Projeto final
+Aulas laboratoriais e Projeto final
 
 Project :
 =========================
-Server/Client application written in JAVA using concurrency and sockets tcp
+Multi-threaded Server and Client application, written in JAVA that
+communicate via TCP
 
-to install and run client just run make on client folder
+to run client:
+        run make IP=<IP_ADDRESS> PORT=<PORT> on Client/ directory
+        run make to use default values for IP and PORT (127.0.0.1:50000)
 
-to install and run server just run make on server folder
-
-default port : 50000
-to change this value just edit the corresponding makefile
+to run server:
+        run make PORT=<PORT> on Server/ directory
+        run make to use default value for PORT(50000)
 
 Grade : 19/20
 
